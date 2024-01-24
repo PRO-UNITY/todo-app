@@ -1,32 +1,26 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../../utils/baseUrl";
+import api from "../../utils/FetchApi";
 
 export const GetCommentCard = async () => {
-  const token = await AsyncStorage.getItem("token");
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-  const response = await axios.get(`${BASE_URL}/todos`, { headers });
+  const response = await api.get(`/todos`);
   return response.data;
 };
+export const GetActiveFavorite = async () => {
+  const response = await api.get(`/favourites`);
+  return response.data;
+};
+
 export const isActiveFavorite = async (data) => {
-  const token = await AsyncStorage.getItem("token");
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-  const response = await axios.post(`${BASE_URL}/favourites`, data, {
-    headers,
-  });
+  const response = await api.post(`/favourites`, data);
   return response.data;
 };
 export const isRemoveFavorite = async (id) => {
-  const token = await AsyncStorage.getItem("token");
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-  const response = await axios.delete(`${BASE_URL}/favourites/${id}`, {
-    headers,
-  });
+  const response = await api.delete(`/favourites/${id}`);
+  return response.data;
+};
+export const AddCommentTodo = async (data) => {
+  const response = await api.post(`/comments`, data);
   return response.data;
 };

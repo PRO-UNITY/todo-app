@@ -1,11 +1,10 @@
-import { View, Text, Modal, Pressable, StyleSheet } from "react-native";
-import React, { useState } from "react";
-import { padding_size } from "../../constants/Spacing";
+import { View, Modal, Pressable, StyleSheet } from "react-native";
+import { spacing_size } from "../../constants/Spacing";
 import { colors } from "../../constants/Colors";
 import { font_size } from "../../constants/FontSize";
 import { useTheme } from "../../context/ThemeContext";
 
-const CommentModal = ({ modalVisible, setModalVisible }) => {
+const CommentModal = ({ modalVisible, setModalVisible, comment }) => {
   const { themeColors } = useTheme();
   return (
     <View style={styles.centeredView}>
@@ -23,11 +22,15 @@ const CommentModal = ({ modalVisible, setModalVisible }) => {
           onPress={() => setModalVisible(false)}
         >
           <View style={styles.modalView}>
-            <Text
-              style={[styles.modalText, { color: themeColors.textPrimary }]}
-            >
-              Hello World!
-            </Text>
+            {/* {comment?.map((item) => (
+              <LightCard
+                comment={""}
+                key={item?.id}
+                style={[styles.modalText, { color: themeColors.textPrimary }]}
+              >
+                Hello World!
+              </LightCard>
+            ))} */}
           </View>
         </Pressable>
       </Modal>
@@ -41,10 +44,10 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   modalView: {
-    flex: 0.3,
+    flex: 0.5,
     backgroundColor: "white",
     borderRadius: 20,
-    paddingVertical: padding_size.PADDING,
+    paddingVertical: spacing_size.SPACING,
     alignItems: "center",
     borderColor: colors.DARK_FOURTY,
     borderWidth: 1,
@@ -53,7 +56,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
-    fontSize: font_size.TEXT_TITLE,
+    fontSize: font_size.TEXT_SUBTITLE,
     fontWeight: "500",
   },
 });

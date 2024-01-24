@@ -3,23 +3,36 @@ import React, { useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../../constants/Colors";
 import { icons } from "../../constants/IconSizes";
-import { padding_size } from "../../constants/Spacing";
 import TextField from "../TextField/TextField";
 import Button from "../Button/Button";
+import { CreateTodoCard } from "../../services/CreateTodo/CreateTodo";
+import { spacing_size } from "../../constants/Spacing";
 
-const AddCommnetCard = () => {
-  const [cardData, setCardData] = useState("");
+const AddCommnetCard = ({ getFunc }) => {
+  const [todo, setTodo] = useState({ title: "" });
+
+  const CreateTodoHandle = () => {
+    CreateTodoCard(todo)
+      .then(async (res) => {
+        getFunc();
+        setTodo((prevData) => ({ ...prevData, title: "" }));
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <View style={styles.searchbar}>
       <View style={styles.searchInput}>
         <TextField
+          inputValue={todo?.title}
           placeholderText={"Say something"}
-          onChangeText={(text) => setCardData(text)}
+          onChangeText={(text) =>
+            setTodo((prevData) => ({ ...prevData, title: text }))
+          }
         />
       </View>
       <View style={styles.searchBtn}>
-        <Button>
+        <Button btnFunc={CreateTodoHandle}>
           <MaterialCommunityIcons
             name="check"
             color={colors.LIGHT_SECONDARY}
@@ -36,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 10,
-    paddingVertical: padding_size.PADDING,
+    paddingVertical: spacing_size.SPACING,
   },
   searchInput: {
     flex: 5,

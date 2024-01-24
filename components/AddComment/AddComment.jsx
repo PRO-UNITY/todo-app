@@ -1,23 +1,23 @@
 import { View, StyleSheet, Pressable } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { TextInput } from "react-native-gesture-handler";
 import { colors } from "../../constants/Colors";
-import { padding_size } from "../../constants/Spacing";
 import { icons } from "../../constants/IconSizes";
 import { useTheme } from "../../context/ThemeContext";
+import { spacing_size } from "../../constants/Spacing";
 
-const AddComment = ({ setIsShowComment }) => {
+const AddComment = ({ getCommnetData, handleAddComment, commentData }) => {
   const { themeColors } = useTheme();
-  const handleAddComment = () => {
-    setIsShowComment(false);
-  };
+
   return (
     <View style={styles.commentBox}>
       <TextInput
+        value={commentData?.comment}
         style={styles.input}
         placeholderTextColor={colors.LIGHT_FOURTY}
         placeholder={"Add comment..."}
+        onChangeText={(text) => getCommnetData(text)}
       />
       <Pressable
         style={[
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   input: {
     height: 37,
     marginVertical: 5,
-    paddingHorizontal: padding_size.PADDING_SMALL,
+    paddingHorizontal: spacing_size.SPACING_SMALL,
     borderWidth: 1,
     borderColor: colors.LIGHT_FOURTY,
     borderRadius: 8,

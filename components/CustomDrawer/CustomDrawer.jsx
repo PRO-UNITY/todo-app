@@ -3,8 +3,8 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../context/ThemeContext";
-import { padding_size } from "../../constants/Spacing";
 import { icons } from "../../constants/IconSizes";
+import { spacing_size } from "../../constants/Spacing";
 
 const CustomDrawer = () => {
   const { themeColors, toggleTheme } = useTheme();
@@ -53,7 +53,7 @@ const CustomDrawer = () => {
         </Pressable>
         <Pressable
           style={styles.routeContent}
-          onPress={() => handleNavigate("USERS")}
+          onPress={() => handleNavigate("FAVORITES")}
         >
           <Icon
             name="people"
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: padding_size.PADDING,
+    padding: spacing_size.SPACING,
   },
   heading: {
     paddingTop: 80,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
-    padding: padding_size.PADDING,
+    padding: spacing_size.SPACING,
   },
   text: {
     letterSpacing: 3,

@@ -7,4 +7,5 @@ export const colors = {
   LIGHT_SECONDARY: "#E1E1E1",
   LIGHT_THIRDSTY: "#EFEFEF",
   LIGHT_FOURTY: "#A2A2A2",
+  ERROR_MSG: "#FF0000ed",
 };

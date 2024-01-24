@@ -4,8 +4,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
-import { padding_size } from "../../constants/Spacing";
 import { font_size } from "../../constants/FontSize";
+import { spacing_size } from "../../constants/Spacing";
 
 const ForgetPassword = ({ navigation }) => {
   const { themeColors } = useTheme();
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: padding_size.PADDING,
+    padding: spacing_size.SPACING,
   },
   loginHead: {
     justifyContent: "center",

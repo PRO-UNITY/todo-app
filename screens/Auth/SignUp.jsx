@@ -4,22 +4,23 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
-import { padding_size } from "../../constants/Spacing";
 import { font_size } from "../../constants/FontSize";
 import { colors } from "../../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SignUpUser } from "../../services/Auth/Auth";
+import { spacing_size } from "../../constants/Spacing";
+import { font_weight } from "../../constants/FontWeight";
 
 const SignUp = ({ navigation }) => {
   const { themeColors } = useTheme();
   const [errorShow, setErrorShow] = useState(false);
   const [signUpData, setSignUpData] = useState({
-    username: "bgfdfecdfwe",
-    first_name: "wdffeefcewf",
-    last_name: "wdffeffcwe",
-    email: "fvefcewrd@gmail.com",
-    password: "wqdeftbgfew",
-    confirm_password: "wqdeftbgfew",
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    confirm_password: "",
   });
 
   const handleInputChange = (field, value) => {
@@ -27,10 +28,8 @@ const SignUp = ({ navigation }) => {
   };
   const handleSignUp = () => {
     SignUpUser(signUpData)
-      .then(async (res) => {
-        console.log(res);
-      })
-      .catch((err) => setErrorShow(true));
+      .then(async () => navigation.navigate("LOGIN"))
+      .catch(() => setErrorShow(true));
   };
 
   return (
@@ -72,8 +71,11 @@ const SignUp = ({ navigation }) => {
       />
       <TextField
         placeholderText={"Conifrm Password"}
-        onChangeText={(text) => handleInputChange("password", text)}
+        onChangeText={(text) => handleInputChange("confirm_password", text)}
       />
+      {errorShow && (
+        <Text style={styles.errorMsg}>Incorrect username or password</Text>
+      )}
       <View style={styles.loginBtn}>
         <Button btnFunc={handleSignUp}>
           <Text style={[styles.text, { color: themeColors.textPrimary }]}>
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: padding_size.PADDING,
+    padding: spacing_size.SPACING,
   },
   loginHead: {
     justifyContent: "center",
@@ -107,33 +109,29 @@ const styles = StyleSheet.create({
   },
   loginTitle: {
     textTransform: "uppercase",
-    marginVertical: 30,
+    marginVertical: spacing_size.SPACING,
     fontSize: font_size.TEXT_TITLE,
     letterSpacing: 3,
   },
   loginBtn: {
-    marginVertical: 25,
-  },
-  image: {
-    width: 70,
-    height: 70,
-  },
-  forgetPass: {
-    textAlign: "right",
-    marginTop: 5,
-    fontWeight: "500",
+    marginVertical: spacing_size.SPACING,
   },
   text: {
     fontSize: font_size.TEXT_SUBTITLE,
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
     textTransform: "uppercase",
   },
   registerLink: {
     textAlign: "center",
-    marginTop: 16,
+    marginTop: spacing_size.SPACING_SMALL,
     color: colors.LIGHT_FOURTY,
   },
   textBold: {
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
+  },
+  errorMsg: {
+    color: colors.ERROR_MSG,
+    textAlign: "center",
+    marginTop: spacing_size.SPACING_SMALL,
   },
 });

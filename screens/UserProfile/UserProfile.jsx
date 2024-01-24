@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,16 +8,30 @@ import {
   Pressable,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { UserCardsData } from "../../mock/data";
 import { ActionCard } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
-import { padding_size } from "../../constants/Spacing";
 import { font_size } from "../../constants/FontSize";
 import { icons } from "../../constants/IconSizes";
 import { colors } from "../../constants/Colors";
+import {
+  GetActiveFavorite,
+  GetCommentCard,
+} from "../../services/Comment/Comment";
+import { spacing_size } from "../../constants/Spacing";
 
 const UserProfile = ({ navigation }) => {
   const { themeColors } = useTheme();
+  const [commentCard, setCommentCard] = useState([]);
+  const [user, setUser] = useState(null);
+
+  const getTodoCard = () => {
+    GetCommentCard().then((res) => setCommentCard(res));
+  };
+
+  useEffect(() => {
+    getTodoCard();
+    GetActiveFavorite().then((res) => setUser(res));
+  }, []);
   const handleBack = () => {
     navigation.navigate("HOME");
   };
@@ -54,16 +68,16 @@ const UserProfile = ({ navigation }) => {
               />
             </View>
             <Text style={[styles.name, { color: themeColors.textPrimary }]}>
-              Mitch
+              {user?.username}
             </Text>
             <Text style={[styles.gmail, { color: themeColors.subtitle }]}>
-              mitchkoko@gmail.com
+              {user?.email}
             </Text>
           </View>
         </View>
-        <View style={{ padding: padding_size.PADDING }}>
-          {UserCardsData.map((item) => (
-            <ActionCard {...item} key={item.id} />
+        <View style={{ padding: spacing_size.SPACING }}>
+          {commentCard.map((item) => (
+            <ActionCard {...item} getFunc={getTodoCard} key={item.id} />
           ))}
         </View>
       </SafeAreaView>
@@ -77,8 +91,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     paddingTop: 50,
-    paddingBottom: padding_size.PADDING,
-    paddingHorizontal: padding_size.PADDING,
+    paddingBottom: spacing_size.SPACING,
+    paddingHorizontal: spacing_size.SPACING,
   },
   backBtn: {
     width: 40,
@@ -91,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   profileImageBox: {
-    padding: padding_size.PADDING,
+    padding: spacing_size.SPACING,
     marginVertical: 15,
     backgroundColor: "#EFEFEF",
     borderRadius: 15,

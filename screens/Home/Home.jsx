@@ -12,9 +12,12 @@ import { ActionCard, AddCommetCard } from "../../components";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
-import { padding_size } from "../../constants/Spacing";
 import { font_size } from "../../constants/FontSize";
-import { GetCommentCard } from "../../services/Comment/Comment";
+import {
+  GetActiveFavorite,
+  GetCommentCard,
+} from "../../services/Comment/Comment";
+import { spacing_size } from "../../constants/Spacing";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -24,8 +27,12 @@ const Home = () => {
   const openDrawer = () => {
     navigation.openDrawer();
   };
-  useEffect(() => {
+  const getTodoCard = () => {
     GetCommentCard().then((res) => setCommentCard(res));
+  };
+  useEffect(() => {
+    getTodoCard();
+    GetActiveFavorite().then((res) => console.log(res));
   }, []);
   console.log(commentCard);
   return (
@@ -54,11 +61,12 @@ const Home = () => {
             </Text>
             <View />
           </View>
-          <AddCommetCard />
+
+          <AddCommetCard getFunc={getTodoCard} />
         </View>
-        <View style={{ padding: padding_size.PADDING }}>
+        <View style={{ padding: spacing_size.SPACING }}>
           {commentCard.map((item) => (
-            <ActionCard {...item} key={item.id} />
+            <ActionCard {...item} getFunc={getTodoCard} key={item.id} />
           ))}
         </View>
       </SafeAreaView>
@@ -71,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heading: {
-    paddingHorizontal: padding_size.PADDING,
+    paddingHorizontal: spacing_size.SPACING,
   },
   headingTop: {
     paddingTop: 55,
@@ -89,7 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 10,
-    paddingVertical: padding_size.PADDING,
+    paddingVertical: spacing_size.SPACING,
   },
   searchInput: {
     flex: 5,

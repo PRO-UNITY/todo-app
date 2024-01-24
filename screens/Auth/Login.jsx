@@ -4,11 +4,12 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
-import { padding_size } from "../../constants/Spacing";
 import { font_size } from "../../constants/FontSize";
 import { colors } from "../../constants/Colors";
 import { SignInUser } from "../../services/Auth/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { spacing_size } from "../../constants/Spacing";
+import { font_weight } from "../../constants/FontWeight";
 
 const Login = ({ navigation }) => {
   const { themeColors } = useTheme();
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: padding_size.PADDING,
+    padding: spacing_size.SPACING,
   },
   loginHead: {
     justifyContent: "center",
@@ -96,38 +97,33 @@ const styles = StyleSheet.create({
   },
   loginTitle: {
     textTransform: "uppercase",
-    marginVertical: 30,
+    marginVertical: spacing_size.SPACING_MEDIUM,
     fontSize: font_size.TEXT_TITLE,
-    letterSpacing: 3,
+    letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
   },
   loginBtn: {
-    marginVertical: 25,
-  },
-  image: {
-    width: 70,
-    height: 70,
+    marginVertical: spacing_size.SPACING_MEDIUM,
   },
   forgetPass: {
     textAlign: "right",
-    marginTop: 5,
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
   },
   text: {
     fontSize: font_size.TEXT_SUBTITLE,
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
     textTransform: "uppercase",
   },
   registerLink: {
     textAlign: "center",
-    marginTop: 16,
+    marginTop: spacing_size.SPACING,
     color: colors.LIGHT_FOURTY,
   },
   textBold: {
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
   },
   errorMsg: {
-    color: "red",
+    color: colors.ERROR_MSG,
     textAlign: "center",
-    marginTop: 15,
+    marginTop: spacing_size.SPACING_SMALL,
   },
 });

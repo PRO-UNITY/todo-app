@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
-const Users = () => {
+const Favorites = () => {
   return (
     <View style={styles.container}>
-      <Text>Users</Text>
+      <Text>Favorites</Text>
     </View>
   );
 };
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Users;
+export default Favorites;

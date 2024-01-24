@@ -1,15 +1,14 @@
-import { View, Text, SafeAreaView, StyleSheet, Pressable } from "react-native";
+import { Text, SafeAreaView, StyleSheet } from "react-native";
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
-import { padding_size } from "../../constants/Spacing";
 import { font_size } from "../../constants/FontSize";
 import { colors } from "../../constants/Colors";
+import { spacing_size } from "../../constants/Spacing";
 
-const LightCard = ({ comment, user, setModalVisible }) => {
+const LightCard = ({ comment, user }) => {
   const { themeColors } = useTheme();
   return (
-    <Pressable
-      onPress={() => setModalVisible(true)}
+    <SafeAreaView
       style={[
         styles.cardContainer,
         { backgroundColor: themeColors.backgroundLight },
@@ -21,12 +20,12 @@ const LightCard = ({ comment, user, setModalVisible }) => {
       <Text style={[styles.subtitle, { color: themeColors.subtitle }]}>
         {user?.email}
       </Text>
-    </Pressable>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   cardContainer: {
-    padding: padding_size.PADDING_SMALL,
+    padding: spacing_size.SPACING_SMALL,
     marginVertical: 3,
     borderRadius: 10,
   },

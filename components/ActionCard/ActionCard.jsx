@@ -5,17 +5,29 @@ import LightCard from "../LightCard/LightCard";
 import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
 import { colors } from "../../constants/Colors";
-import { padding_size } from "../../constants/Spacing";
 import { font_size } from "../../constants/FontSize";
 import CommentModal from "../CommentModal/CommentModal";
 import {
+  AddCommentTodo,
   isActiveFavorite,
   isRemoveFavorite,
 } from "../../services/Comment/Comment";
+import AddComment from "../AddComment/AddComment";
+import { spacing_size } from "../../constants/Spacing";
 
-const ActionCard = ({ id, title, user, comment, favoriteCount, favorite }) => {
+const ActionCard = ({
+  id,
+  title,
+  user,
+  comment,
+  favorite_count,
+  comment_count,
+  favorite,
+  getFunc,
+}) => {
   const [isShowComment, setIsShowComment] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [commentData, setcommentData] = useState({ todo: id, comment: "" });
   const { themeColors } = useTheme();
 
   const handleActiveFavorite = () => {
@@ -29,9 +41,22 @@ const ActionCard = ({ id, title, user, comment, favoriteCount, favorite }) => {
       });
     }
   };
+  const getCommnetData = (text) => {
+    setcommentData((prevData) => ({ ...prevData, comment: text }));
+  };
+  const handleAddComment = () => {
+    AddCommentTodo(commentData)
+      .then(async (res) => {
+        getFunc();
+        setcommentData((prevData) => ({ ...prevData, comment: "" }));
+        setIsShowComment(false);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
-    <SafeAreaView
+    <Pressable
+      onPress={() => setModalVisible((prev) => !prev)}
       style={[styles.cardContainer, { borderColor: themeColors.cardBorder }]}
     >
       <Text style={[styles.cardTitle, { color: themeColors.textPrimary }]}>
@@ -41,16 +66,23 @@ const ActionCard = ({ id, title, user, comment, favoriteCount, favorite }) => {
         {user?.username}
       </Text>
       <CommentModal
+        comment={comment}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
       <View style={styles.cardBody}>
         {comment?.length > 0 &&
-          comment.map((item, i) => (
-            <LightCard {...item} key={i} setModalVisible={setModalVisible} />
-          ))}
+          comment.map((item, i) => <LightCard {...item} key={i} />)}
       </View>
-      {isShowComment && <AddComment setIsShowComment={setIsShowComment} />}
+      {isShowComment && (
+        <AddComment
+          getCommnetData={getCommnetData}
+          handleAddComment={handleAddComment}
+          commentData={commentData}
+          title={title}
+          user={user}
+        />
+      )}
       <View style={[styles.actionsContainer]}>
         <Pressable
           style={styles.actionsDetails}
@@ -61,7 +93,7 @@ const ActionCard = ({ id, title, user, comment, favoriteCount, favorite }) => {
             color={colors.DARK_THIRDSTY}
             size={icons.DEFAULT_ICON}
           />
-          <Text style={{ color: colors.DARK_THIRDSTY }}>0</Text>
+          <Text style={{ color: colors.DARK_THIRDSTY }}>{comment_count}</Text>
         </Pressable>
         <Pressable style={styles.actionsDetails} onPress={handleActiveFavorite}>
           <Icon
@@ -69,16 +101,16 @@ const ActionCard = ({ id, title, user, comment, favoriteCount, favorite }) => {
             color={`${favorite ? "red" : colors.DARK_THIRDSTY}`}
             size={icons.DEFAULT_ICON}
           />
-          <Text style={{ color: colors.DARK_THIRDSTY }}>{favoriteCount}</Text>
+          <Text style={{ color: colors.DARK_THIRDSTY }}>{favorite_count}</Text>
         </Pressable>
       </View>
-    </SafeAreaView>
+    </Pressable>
   );
 };
 const styles = StyleSheet.create({
   cardContainer: {
     borderBottomWidth: 1,
-    paddingVertical: padding_size.PADDING,
+    paddingVertical: spacing_size.SPACING,
   },
   cardTitle: {
     fontWeight: "500",
@@ -95,7 +127,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   cardBody: {
-    marginTop: 20,
+    marginTop: 0,
   },
   actionsDetails: {
     flexDirection: "row",

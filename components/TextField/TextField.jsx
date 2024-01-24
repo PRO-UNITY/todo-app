@@ -2,9 +2,9 @@ import { StyleSheet, TextInput, View } from "react-native";
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { colors } from "../../constants/Colors";
-import { padding_size } from "../../constants/Spacing";
+import { spacing_size } from "../../constants/Spacing";
 
-const TextField = ({ placeholderText, onChangeText }) => {
+const TextField = ({ placeholderText, onChangeText, inputValue }) => {
   const { themeColors } = useTheme();
   return (
     <View>
@@ -13,6 +13,7 @@ const TextField = ({ placeholderText, onChangeText }) => {
         placeholderTextColor={colors.LIGHT_FOURTY}
         placeholder={placeholderText}
         onChangeText={onChangeText}
+        value={inputValue}
       />
     </View>
   );
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginVertical: 5,
     borderWidth: 1,
-    padding: padding_size.PADDING_SMALL,
+    padding: spacing_size.SPACING_SMALL,
     borderRadius: 10,
   },
 });
