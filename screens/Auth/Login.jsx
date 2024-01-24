@@ -48,14 +48,16 @@ const Login = ({ navigation }) => {
           Twittwer
         </Text>
       </View>
-      <TextField
-        placeholderText={"Username"}
-        onChangeText={(text) => handleInputChange("username", text)}
-      />
-      <TextField
-        placeholderText={"Password"}
-        onChangeText={(text) => handleInputChange("password", text)}
-      />
+      <View style={styles.inputBox}>
+        <TextField
+          placeholderText={"Username"}
+          onChangeText={(text) => handleInputChange("username", text)}
+        />
+        <TextField
+          placeholderText={"Password"}
+          onChangeText={(text) => handleInputChange("password", text)}
+        />
+      </View>
       <Pressable onPress={() => navigation.navigate("FORGET_PASSWORD")}>
         <Text style={[styles.forgetPass, { color: themeColors.textPrimary }]}>
           Forget Password?
@@ -100,6 +102,10 @@ const styles = StyleSheet.create({
     marginVertical: spacing_size.SPACING_MEDIUM,
     fontSize: font_size.TEXT_TITLE,
     letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
+  },
+  inputBox: {
+    gap: spacing_size.SPACING_SMALL,
+    marginVertical: spacing_size.SPACING_SMALL,
   },
   loginBtn: {
     marginVertical: spacing_size.SPACING_MEDIUM,

@@ -6,6 +6,9 @@ import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
 import { font_size } from "../../constants/FontSize";
 import { spacing_size } from "../../constants/Spacing";
+import { font_weight } from "../../constants/FontWeight";
+import { colors } from "../../constants/Colors";
+import { rounded } from "../../constants/Corners";
 
 const ForgetPassword = ({ navigation }) => {
   const { themeColors } = useTheme();
@@ -26,16 +29,18 @@ const ForgetPassword = ({ navigation }) => {
         { backgroundColor: themeColors.backgroundLight },
       ]}
     >
-      <Pressable
-        style={[styles.backBtn, { backgroundColor: themeColors.bgWhite }]}
-        onPress={handleBack}
-      >
-        <Icon
-          name="arrow-back"
-          color={themeColors.icon}
-          size={icons.DEFAULT_ICON}
-        />
-      </Pressable>
+      <View style={styles.backBtnBox}>
+        <Pressable
+          style={[styles.backBtn, { backgroundColor: themeColors.bgWhite }]}
+          onPress={handleBack}
+        >
+          <Icon
+            name="arrow-back"
+            color={themeColors.icon}
+            size={icons.DEFAULT_ICON}
+          />
+        </Pressable>
+      </View>
       <View style={styles.loginHead}>
         <Icon
           name="person"
@@ -78,31 +83,31 @@ const styles = StyleSheet.create({
   },
   loginTitle: {
     textTransform: "uppercase",
-    marginVertical: 30,
+    marginVertical: spacing_size.SPACING_MEDIUM,
     fontSize: font_size.TEXT_TITLE,
-    letterSpacing: 3,
+    letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
+  },
+  backBtnBox: {
+    position: "absolute",
+    top: spacing_size.SPACING,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
   },
   backBtn: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: spacing_size.SPACING_SMALL,
+    borderRadius: rounded.ROUNDED_CIRCLE,
   },
   loginBtn: {
-    marginVertical: 25,
+    marginVertical: spacing_size.SPACING,
   },
   text: {
     fontSize: font_size.TEXT_SUBTITLE,
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
     textTransform: "uppercase",
   },
   errorMsg: {
-    color: "red",
+    color: colors.ERROR_MSG,
     textAlign: "center",
-    marginTop: 15,
+    marginTop: spacing_size.SPACING_SMALL,
   },
 });

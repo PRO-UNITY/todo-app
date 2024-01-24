@@ -4,11 +4,12 @@ import { useTheme } from "../../context/ThemeContext";
 import { font_size } from "../../constants/FontSize";
 import { colors } from "../../constants/Colors";
 import { spacing_size } from "../../constants/Spacing";
+import { View } from "react-native-web";
 
 const LightCard = ({ comment, user }) => {
   const { themeColors } = useTheme();
   return (
-    <SafeAreaView
+    <View
       style={[
         styles.cardContainer,
         { backgroundColor: themeColors.backgroundLight },
@@ -20,7 +21,7 @@ const LightCard = ({ comment, user }) => {
       <Text style={[styles.subtitle, { color: themeColors.subtitle }]}>
         {user?.email}
       </Text>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

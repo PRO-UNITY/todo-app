@@ -18,6 +18,9 @@ import {
   GetCommentCard,
 } from "../../services/Comment/Comment";
 import { spacing_size } from "../../constants/Spacing";
+import { GetUser } from "../../services/Auth/Auth";
+import { rounded } from "../../constants/Corners";
+import { font_weight } from "../../constants/FontWeight";
 
 const UserProfile = ({ navigation }) => {
   const { themeColors } = useTheme();
@@ -30,8 +33,9 @@ const UserProfile = ({ navigation }) => {
 
   useEffect(() => {
     getTodoCard();
-    GetActiveFavorite().then((res) => setUser(res));
+    GetUser().then((res) => setUser(res));
   }, []);
+  console.log(user);
   const handleBack = () => {
     navigation.navigate("HOME");
   };
@@ -44,16 +48,18 @@ const UserProfile = ({ navigation }) => {
             { backgroundColor: themeColors.backgroundLight },
           ]}
         >
-          <Pressable
-            style={[styles.backBtn, { backgroundColor: themeColors.bgWhite }]}
-            onPress={handleBack}
-          >
-            <Icon
-              name="arrow-back"
-              color={themeColors.icon}
-              size={icons.DEFAULT_ICON}
-            />
-          </Pressable>
+          <View style={styles.backBtnBox}>
+            <Pressable
+              style={[styles.backBtn, { backgroundColor: themeColors.bgWhite }]}
+              onPress={handleBack}
+            >
+              <Icon
+                name="arrow-back"
+                color={themeColors.icon}
+                size={icons.DEFAULT_ICON}
+              />
+            </Pressable>
+          </View>
           <View style={styles.prifileDataBox}>
             <View
               style={[
@@ -90,30 +96,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heading: {
-    paddingTop: 50,
+    paddingTop: spacing_size.SPACING_LARGE,
     paddingBottom: spacing_size.SPACING,
     paddingHorizontal: spacing_size.SPACING,
   },
+  backBtnBox: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
   backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: spacing_size.SPACING_SMALL,
+    borderRadius: rounded.ROUNDED_CIRCLE,
   },
   prifileDataBox: {
     alignItems: "center",
   },
   profileImageBox: {
     padding: spacing_size.SPACING,
-    marginVertical: 15,
+    marginVertical: spacing_size.SPACING,
     backgroundColor: "#EFEFEF",
-    borderRadius: 15,
+    borderRadius: rounded.ROUNDED_MD,
   },
   name: {
-    fontWeight: "600",
+    fontWeight: font_weight.FONT_BOLD,
     fontSize: font_size.TEXT_TITLE,
-    marginVertical: 10,
+    marginVertical: spacing_size.SPACING_SMALL,
   },
   gmail: {
     color: "#a2a2a2",

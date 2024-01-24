@@ -6,6 +6,8 @@ import { colors } from "../../constants/Colors";
 import { icons } from "../../constants/IconSizes";
 import { useTheme } from "../../context/ThemeContext";
 import { spacing_size } from "../../constants/Spacing";
+import { rounded } from "../../constants/Corners";
+import { border } from "../../constants/Border";
 
 const AddComment = ({ getCommnetData, handleAddComment, commentData }) => {
   const { themeColors } = useTheme();
@@ -39,22 +41,19 @@ const styles = StyleSheet.create({
   commentBox: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: spacing_size.SPACING_SMALL,
   },
   input: {
-    height: 37,
-    marginVertical: 5,
-    paddingHorizontal: spacing_size.SPACING_SMALL,
-    borderWidth: 1,
+    padding: spacing_size.SPACING_SMALL,
+    borderBottomWidth: border.BORDER_DEFAULT,
     borderColor: colors.LIGHT_FOURTY,
-    borderRadius: 8,
-    flex: 5,
+    flex: 6,
   },
   addBtn: {
-    height: 37,
+    padding: spacing_size.SPACING_SMALL,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 5,
+    borderRadius: rounded.ROUNDED_SM,
     flex: 1,
   },
 });

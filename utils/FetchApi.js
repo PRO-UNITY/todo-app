@@ -1,7 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "./baseUrl";
-// import { navigateToLoginPage } from "./navigateToLogin";
+import { navigateToLoginPage } from "./NavigateLogin";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -14,7 +14,6 @@ api.interceptors.request.use(
     if (authToken) {
       config.headers.Authorization = `Bearer ${authToken}`;
     }
-
     return config;
   },
   (error) => {
@@ -27,10 +26,10 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    //     if (error.response && error.response.status === 401) {
-    //       navigateToLoginPage("Login");
-    //     }
-
+    if (error.response && error.response.status === 401) {
+      console.log("ecses");
+      navigateToLoginPage();
+    }
     return Promise.reject(error);
   }
 );

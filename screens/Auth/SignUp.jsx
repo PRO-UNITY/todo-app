@@ -28,7 +28,10 @@ const SignUp = ({ navigation }) => {
   };
   const handleSignUp = () => {
     SignUpUser(signUpData)
-      .then(async () => navigation.navigate("LOGIN"))
+      .then(async (res) => {
+        await AsyncStorage.setItem("token", res?.token?.access);
+        navigation.navigate("LOGIN");
+      })
       .catch(() => setErrorShow(true));
   };
 
@@ -49,30 +52,32 @@ const SignUp = ({ navigation }) => {
           Twittwer
         </Text>
       </View>
-      <TextField
-        placeholderText={"Username"}
-        onChangeText={(text) => handleInputChange("username", text)}
-      />
-      <TextField
-        placeholderText={"FirstName"}
-        onChangeText={(text) => handleInputChange("first_name", text)}
-      />
-      <TextField
-        placeholderText={"LastName"}
-        onChangeText={(text) => handleInputChange("last_name", text)}
-      />
-      <TextField
-        placeholderText={"Email"}
-        onChangeText={(text) => handleInputChange("email", text)}
-      />
-      <TextField
-        placeholderText={"Password"}
-        onChangeText={(text) => handleInputChange("password", text)}
-      />
-      <TextField
-        placeholderText={"Conifrm Password"}
-        onChangeText={(text) => handleInputChange("confirm_password", text)}
-      />
+      <View style={styles.inputBox}>
+        <TextField
+          placeholderText={"Username"}
+          onChangeText={(text) => handleInputChange("username", text)}
+        />
+        <TextField
+          placeholderText={"FirstName"}
+          onChangeText={(text) => handleInputChange("first_name", text)}
+        />
+        <TextField
+          placeholderText={"LastName"}
+          onChangeText={(text) => handleInputChange("last_name", text)}
+        />
+        <TextField
+          placeholderText={"Email"}
+          onChangeText={(text) => handleInputChange("email", text)}
+        />
+        <TextField
+          placeholderText={"Password"}
+          onChangeText={(text) => handleInputChange("password", text)}
+        />
+        <TextField
+          placeholderText={"Conifrm Password"}
+          onChangeText={(text) => handleInputChange("confirm_password", text)}
+        />
+      </View>
       {errorShow && (
         <Text style={styles.errorMsg}>Incorrect username or password</Text>
       )}
@@ -111,10 +116,14 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginVertical: spacing_size.SPACING,
     fontSize: font_size.TEXT_TITLE,
-    letterSpacing: 3,
+    letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
   },
   loginBtn: {
     marginVertical: spacing_size.SPACING,
+  },
+  inputBox: {
+    gap: spacing_size.SPACING_SMALL,
+    marginVertical: spacing_size.SPACING_SMALL,
   },
   text: {
     fontSize: font_size.TEXT_SUBTITLE,

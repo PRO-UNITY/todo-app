@@ -14,6 +14,8 @@ import {
 } from "../../services/Comment/Comment";
 import AddComment from "../AddComment/AddComment";
 import { spacing_size } from "../../constants/Spacing";
+import { font_weight } from "../../constants/FontWeight";
+import { border } from "../../constants/Border";
 
 const ActionCard = ({
   id,
@@ -29,15 +31,14 @@ const ActionCard = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [commentData, setcommentData] = useState({ todo: id, comment: "" });
   const { themeColors } = useTheme();
-
   const handleActiveFavorite = () => {
     if (favorite) {
-      isActiveFavorite({ todo: id, is_favorite: true }).then(async (res) => {
-        console.log(res);
+      isRemoveFavorite(id).then(async (res) => {
+        getFunc();
       });
     } else {
-      isRemoveFavorite(id).then(async (res) => {
-        console.log(res);
+      isActiveFavorite({ todo: id, is_favorite: true }).then(async (res) => {
+        getFunc();
       });
     }
   };
@@ -53,27 +54,29 @@ const ActionCard = ({
       })
       .catch((err) => console.log(err));
   };
-
   return (
-    <Pressable
-      onPress={() => setModalVisible((prev) => !prev)}
+    <SafeAreaView
       style={[styles.cardContainer, { borderColor: themeColors.cardBorder }]}
     >
-      <Text style={[styles.cardTitle, { color: themeColors.textPrimary }]}>
-        {title}
-      </Text>
-      <Text style={[styles.subtitle, { color: themeColors.subtitle }]}>
-        {user?.username}
-      </Text>
+      <Pressable onPress={() => setModalVisible((prev) => !prev)}>
+        <Text style={[styles.cardTitle, { color: themeColors.textPrimary }]}>
+          {title}
+        </Text>
+        <Text style={[styles.subtitle, { color: themeColors.subtitle }]}>
+          {user?.username}
+        </Text>
+        <View style={styles.cardBody}>
+          {comment?.length > 0 &&
+            comment.map((item, i) => <LightCard {...item} key={i} />)}
+        </View>
+      </Pressable>
       <CommentModal
         comment={comment}
+        title={title}
+        user={user}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
-      <View style={styles.cardBody}>
-        {comment?.length > 0 &&
-          comment.map((item, i) => <LightCard {...item} key={i} />)}
-      </View>
       {isShowComment && (
         <AddComment
           getCommnetData={getCommnetData}
@@ -104,35 +107,34 @@ const ActionCard = ({
           <Text style={{ color: colors.DARK_THIRDSTY }}>{favorite_count}</Text>
         </Pressable>
       </View>
-    </Pressable>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   cardContainer: {
-    borderBottomWidth: 1,
+    borderBottomWidth: border.BORDER_DEFAULT,
     paddingVertical: spacing_size.SPACING,
   },
   cardTitle: {
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
     fontSize: font_size.TEXT_SUBTITLE,
   },
   subtitle: {
     fontSize: font_size.TEXT_DESCRIPTION,
-    fontWeight: "400",
   },
   actionsContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    paddingVertical: 10,
-    gap: 10,
+    paddingVertical: spacing_size.SPACING_SMALL,
+    gap: spacing_size.SPACING_SMALL,
   },
   cardBody: {
-    marginTop: 0,
+    marginTop: spacing_size.SPACING_SMALL,
   },
   actionsDetails: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: spacing_size.SPACING_SMALL,
     color: "red",
   },
 });

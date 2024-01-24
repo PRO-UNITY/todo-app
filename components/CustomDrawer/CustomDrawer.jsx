@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
 import { spacing_size } from "../../constants/Spacing";
+import { font_weight } from "../../constants/FontWeight";
 
 const CustomDrawer = () => {
   const { themeColors, toggleTheme } = useTheme();
@@ -53,7 +54,7 @@ const CustomDrawer = () => {
         </Pressable>
         <Pressable
           style={styles.routeContent}
-          onPress={() => handleNavigate("FAVORITES")}
+          onPress={() => handleNavigate("USERS")}
         >
           <Icon
             name="people"
@@ -84,21 +85,20 @@ const styles = StyleSheet.create({
     padding: spacing_size.SPACING,
   },
   heading: {
-    paddingTop: 80,
-    paddingBottom: 50,
+    paddingVertical: spacing_size.SPACING_LARGE,
     justifyContent: "center",
     alignItems: "center",
   },
   routeContent: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 20,
+    gap: spacing_size.SPACING,
     padding: spacing_size.SPACING,
   },
   text: {
-    letterSpacing: 3,
+    letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
     textTransform: "uppercase",
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
   },
 });
 

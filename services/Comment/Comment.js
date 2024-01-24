@@ -7,17 +7,12 @@ export const GetCommentCard = async () => {
   const response = await api.get(`/todos`);
   return response.data;
 };
-export const GetActiveFavorite = async () => {
-  const response = await api.get(`/favourites`);
-  return response.data;
-};
-
 export const isActiveFavorite = async (data) => {
   const response = await api.post(`/favourites`, data);
   return response.data;
 };
 export const isRemoveFavorite = async (id) => {
-  const response = await api.delete(`/favourites/${id}`);
+  const response = await api.delete(`/favourite/${id}`);
   return response.data;
 };
 export const AddCommentTodo = async (data) => {

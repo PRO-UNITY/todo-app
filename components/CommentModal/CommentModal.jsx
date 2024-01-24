@@ -1,10 +1,19 @@
-import { View, Modal, Pressable, StyleSheet } from "react-native";
+import { View, Modal, Pressable, StyleSheet, Text } from "react-native";
 import { spacing_size } from "../../constants/Spacing";
 import { colors } from "../../constants/Colors";
 import { font_size } from "../../constants/FontSize";
 import { useTheme } from "../../context/ThemeContext";
+import { font_weight } from "../../constants/FontWeight";
+import { border } from "../../constants/Border";
+import { rounded } from "../../constants/Corners";
 
-const CommentModal = ({ modalVisible, setModalVisible, comment }) => {
+const CommentModal = ({
+  modalVisible,
+  setModalVisible,
+  comment,
+  title,
+  user,
+}) => {
   const { themeColors } = useTheme();
   return (
     <View style={styles.centeredView}>
@@ -22,15 +31,31 @@ const CommentModal = ({ modalVisible, setModalVisible, comment }) => {
           onPress={() => setModalVisible(false)}
         >
           <View style={styles.modalView}>
-            {/* {comment?.map((item) => (
-              <LightCard
-                comment={""}
-                key={item?.id}
-                style={[styles.modalText, { color: themeColors.textPrimary }]}
-              >
-                Hello World!
-              </LightCard>
-            ))} */}
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.author}>{user?.username}</Text>
+            {comment.length > 0 ? (
+              comment?.map((item) => (
+                <View
+                  style={[
+                    styles.commentsCard,
+                    { borderColor: themeColors.backgroundLight },
+                  ]}
+                  key={item?.id}
+                >
+                  <Text>{item?.comment?.user?.username}</Text>
+                  <Text
+                    style={[
+                      styles.commentText,
+                      { color: themeColors.subtitle },
+                    ]}
+                  >
+                    {item?.comment}
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.warningMsg}>No commnet yet...</Text>
+            )}
           </View>
         </Pressable>
       </Modal>
@@ -41,23 +66,44 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "flex-end",
-    marginTop: 50,
+    marginTop: spacing_size.SPACING_LARGE,
+  },
+  title: {
+    fontSize: font_size.TEXT_TITLE,
+    marginTop: spacing_size.SPACING_MEDIUM,
+    fontWeight: font_weight.FONT_BOLD,
+    textAlign: "center",
+  },
+  author: {
+    textAlign: "center",
+    marginBottom: spacing_size.SPACING,
   },
   modalView: {
-    flex: 0.5,
+    flex: 0.75,
     backgroundColor: "white",
-    borderRadius: 20,
+    borderRadius: rounded.ROUNDED_MD,
     paddingVertical: spacing_size.SPACING,
-    alignItems: "center",
     borderColor: colors.DARK_FOURTY,
-    borderWidth: 1,
-    elevation: 6,
+    borderWidth: border.BORDER_DEFAULT,
+    padding: spacing_size.SPACING,
+  },
+  commentsCard: {
+    borderWidth: border.BORDER_DEFAULT,
+    padding: spacing_size.SPACING_SMALL,
+    borderRadius: rounded.ROUNDED_SM,
+  },
+  commentText: {
+    fontSize: font_size.TEXT_SUBTITLE,
+    fontWeight: font_weight.FONT_BOLD,
   },
   modalText: {
-    marginBottom: 15,
+    marginBottom: spacing_size.SPACING_SMALL,
     textAlign: "center",
     fontSize: font_size.TEXT_SUBTITLE,
-    fontWeight: "500",
+    fontWeight: font_weight.FONT_BOLD,
+  },
+  warningMsg: {
+    textAlign: "center",
   },
 });
 

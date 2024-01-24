@@ -1,6 +1,8 @@
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
+import { rounded } from "../../constants/Corners";
+import { spacing_size } from "../../constants/Spacing";
 
 const Button = ({ children, btnFunc }) => {
   const { themeColors } = useTheme();
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    height: 55,
-    borderRadius: 10,
+    paddingVertical: spacing_size.SPACING_SMALL,
+    borderRadius: rounded.ROUNDED_SM,
   },
 });

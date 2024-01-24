@@ -36,7 +36,7 @@ const AddCommnetCard = ({ getFunc }) => {
           <MaterialCommunityIcons
             name="check"
             color={colors.LIGHT_SECONDARY}
-            size={icons.MEDIUM_ICON}
+            size={icons.DEFAULT_ICON}
           />
         </Button>
       </View>
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: 10,
+    gap: spacing_size.SPACING_SMALL,
     paddingVertical: spacing_size.SPACING,
   },
   searchInput: {
