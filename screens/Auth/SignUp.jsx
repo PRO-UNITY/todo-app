@@ -30,7 +30,7 @@ const SignUp = ({ navigation }) => {
     SignUpUser(signUpData)
       .then(async (res) => {
         await AsyncStorage.setItem("token", res?.token?.access);
-        navigation.navigate("LOGIN");
+        navigation.navigate("HOME");
       })
       .catch(() => setErrorShow(true));
   };

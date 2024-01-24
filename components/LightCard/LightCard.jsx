@@ -9,7 +9,7 @@ import { View } from "react-native-web";
 const LightCard = ({ comment, user }) => {
   const { themeColors } = useTheme();
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.cardContainer,
         { backgroundColor: themeColors.backgroundLight },
@@ -21,7 +21,7 @@ const LightCard = ({ comment, user }) => {
       <Text style={[styles.subtitle, { color: themeColors.subtitle }]}>
         {user?.email}
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
