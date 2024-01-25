@@ -16,7 +16,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
 
           script: |
-            cd /var/www/website
+            cd /var/www/todo-app
             git pull
             npm i
             npx expo export --platform web
