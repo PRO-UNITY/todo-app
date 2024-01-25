@@ -28,7 +28,7 @@ const Login = ({ navigation }) => {
         await AsyncStorage.setItem("token", res?.token?.access);
         navigation.navigate("HOME");
       })
-      .catch((err) => setErrorShow(true));
+      .catch(() => setErrorShow(true));
   };
 
   return (

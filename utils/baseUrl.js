@@ -1,1 +1,1 @@
-export const BASE_URL = "https://api.prounity.uz";
+export const BASE_URL = "https://crud-app.prounity.uz/todo";

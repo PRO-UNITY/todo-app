@@ -22,7 +22,7 @@ const CustomDrawer = () => {
     >
       <View style={styles.heading}>
         <Pressable onPress={toggleTheme}>
-          <Icon name="heart" color={themeColors.icon} size={30} />
+          <Icon name="heart" color={themeColors.icon} size={icons.LARGE_ICON} />
         </Pressable>
       </View>
       <DrawerContentScrollView>
@@ -70,7 +70,11 @@ const CustomDrawer = () => {
         style={styles.routeContent}
         onPress={() => handleNavigate("LOGIN")}
       >
-        <Icon name="log-out-outline" color={themeColors.icon} size={25} />
+        <Icon
+          name="log-out-outline"
+          color={themeColors.icon}
+          size={icons.MEDIUM_ICON}
+        />
         <Text style={[styles.text, { color: themeColors.textPrimary }]}>
           Logout
         </Text>
