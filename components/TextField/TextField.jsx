@@ -6,12 +6,25 @@ import { spacing_size } from "../../constants/Spacing";
 import { rounded } from "../../constants/Corners";
 import { border } from "../../constants/Border";
 
-const TextField = ({ placeholderText, onChangeText, inputValue }) => {
+const TextField = ({
+  placeholderText,
+  onChangeText,
+  inputValue,
+  secureTextEntry,
+  error,
+}) => {
   const { themeColors } = useTheme();
   return (
     <View>
       <TextInput
-        style={[styles.input, { borderColor: themeColors.inputBorder }]}
+        secureTextEntry={secureTextEntry}
+        style={[
+          styles.input,
+          {
+            borderColor: error ? colors.ERROR_MSG : themeColors.inputBorder,
+            outline: border.BORDER_NONE,
+          },
+        ]}
         placeholderTextColor={colors.LIGHT_FOURTY}
         placeholder={placeholderText}
         onChangeText={onChangeText}

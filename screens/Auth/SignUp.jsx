@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
@@ -10,9 +10,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SignUpUser } from "../../services/Auth/Auth";
 import { spacing_size } from "../../constants/Spacing";
 import { font_weight } from "../../constants/FontWeight";
+import { rounded } from "../../constants/Corners";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 const SignUp = ({ navigation }) => {
   const { themeColors } = useTheme();
+  const navigationRoot = useNavigation();
+  const focused = useIsFocused();
   const [errorShow, setErrorShow] = useState(false);
   const [signUpData, setSignUpData] = useState({
     username: "",
@@ -22,11 +26,33 @@ const SignUp = ({ navigation }) => {
     password: "",
     confirm_password: "",
   });
+  const [inputErrors, setInputErrors] = useState({
+    username: false,
+    first_name: false,
+    last_name: false,
+    email: false,
+    password: false,
+    confirm_password: false,
+  });
 
   const handleInputChange = (field, value) => {
     setSignUpData((prevData) => ({ ...prevData, [field]: value }));
+    setInputErrors((prevErrors) => ({ ...prevErrors, [field]: false }));
   };
   const handleSignUp = () => {
+    const emptyFields = Object.keys(signUpData).filter(
+      (field) => signUpData[field].trim() === ""
+    );
+
+    if (emptyFields.length > 0) {
+      const errors = {};
+      emptyFields.forEach((field) => {
+        errors[field] = true;
+      });
+      setInputErrors(errors);
+      setErrorShow(true);
+      return;
+    }
     SignUpUser(signUpData)
       .then(async (res) => {
         await AsyncStorage.setItem("token", res?.token?.access);
@@ -34,6 +60,12 @@ const SignUp = ({ navigation }) => {
       })
       .catch(() => setErrorShow(true));
   };
+  useEffect(() => {
+    const currentRoute =
+      navigationRoot.getState().routeNames[navigationRoot.getState().index];
+    localStorage.setItem("route", currentRoute);
+    console.log(currentRoute);
+  }, [focused]);
 
   return (
     <View
@@ -56,30 +88,40 @@ const SignUp = ({ navigation }) => {
         <TextField
           placeholderText={"Username"}
           onChangeText={(text) => handleInputChange("username", text)}
+          error={inputErrors.username}
         />
         <TextField
           placeholderText={"FirstName"}
           onChangeText={(text) => handleInputChange("first_name", text)}
+          error={inputErrors.first_name}
         />
         <TextField
           placeholderText={"LastName"}
           onChangeText={(text) => handleInputChange("last_name", text)}
+          error={inputErrors.last_name}
         />
         <TextField
           placeholderText={"Email"}
           onChangeText={(text) => handleInputChange("email", text)}
+          error={inputErrors.email}
         />
         <TextField
+          secureTextEntry
           placeholderText={"Password"}
           onChangeText={(text) => handleInputChange("password", text)}
+          error={inputErrors.password}
         />
         <TextField
-          placeholderText={"Conifrm Password"}
+          secureTextEntry
+          placeholderText={"Confirm Password"}
           onChangeText={(text) => handleInputChange("confirm_password", text)}
+          error={inputErrors.confirm_password}
         />
       </View>
       {errorShow && (
-        <Text style={styles.errorMsg}>Incorrect username or password</Text>
+        <Text style={styles.errorMsg}>
+          Please fill in all the required fields
+        </Text>
       )}
       <View style={styles.loginBtn}>
         <Button btnFunc={handleSignUp}>
@@ -120,6 +162,9 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     marginVertical: spacing_size.SPACING,
+    backgroundColor: colors.LIGHT_PRIMARY,
+    padding: spacing_size.LETTER_SPACING_DEFAULT,
+    borderRadius: rounded.ROUNDED_MD,
   },
   inputBox: {
     gap: spacing_size.SPACING_SMALL,

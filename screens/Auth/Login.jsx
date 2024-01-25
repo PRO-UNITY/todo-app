@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
@@ -10,10 +10,17 @@ import { SignInUser } from "../../services/Auth/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { spacing_size } from "../../constants/Spacing";
 import { font_weight } from "../../constants/FontWeight";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 const Login = ({ navigation }) => {
   const { themeColors } = useTheme();
+  const navigationRoot = useNavigation();
+  const focused = useIsFocused();
   const [errorShow, setErrorShow] = useState(false);
+  const [inputErrors, setInputErrors] = useState({
+    username: false,
+    password: false,
+  });
   const [signInData, setSignInData] = useState({
     username: "",
     password: "",
@@ -21,8 +28,23 @@ const Login = ({ navigation }) => {
 
   const handleInputChange = (field, value) => {
     setSignInData((prevData) => ({ ...prevData, [field]: value }));
+    setInputErrors((prevErrors) => ({ ...prevErrors, [field]: false }));
   };
+
   const handleLogin = () => {
+    const emptyFields = Object.keys(signInData).filter(
+      (field) => signInData[field].trim() === ""
+    );
+
+    if (emptyFields.length > 0) {
+      const errors = {};
+      emptyFields.forEach((field) => {
+        errors[field] = true;
+      });
+      setInputErrors(errors);
+      setErrorShow(true);
+      return;
+    }
     SignInUser(signInData)
       .then(async (res) => {
         await AsyncStorage.setItem("token", res?.token?.access);
@@ -30,6 +52,13 @@ const Login = ({ navigation }) => {
       })
       .catch(() => setErrorShow(true));
   };
+
+  useEffect(() => {
+    const currentRoute =
+      navigationRoot.getState().routeNames[navigationRoot.getState().index];
+    localStorage.setItem("route", currentRoute);
+    console.log(currentRoute);
+  }, [focused]);
 
   return (
     <View
@@ -52,10 +81,13 @@ const Login = ({ navigation }) => {
         <TextField
           placeholderText={"Username"}
           onChangeText={(text) => handleInputChange("username", text)}
+          error={inputErrors.username}
         />
         <TextField
           placeholderText={"Password"}
           onChangeText={(text) => handleInputChange("password", text)}
+          secureTextEntry
+          error={inputErrors.password}
         />
       </View>
       <Pressable onPress={() => navigation.navigate("FORGET_PASSWORD")}>

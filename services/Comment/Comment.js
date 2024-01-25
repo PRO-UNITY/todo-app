@@ -1,10 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { BASE_URL } from "../../utils/baseUrl";
 import api from "../../utils/FetchApi";
 
-export const GetCommentCard = async () => {
-  const response = await api.get(`/todos`);
+export const GetCommentCard = async (page) => {
+  const response = await api.get(`/todos?page=${page}&limit=3`);
   return response.data;
 };
 export const isActiveFavorite = async (data) => {

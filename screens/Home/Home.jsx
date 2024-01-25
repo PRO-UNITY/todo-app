@@ -6,31 +6,48 @@ import {
   ScrollView,
   SafeAreaView,
   Pressable,
+  FlatList,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { ActionCard, AddCommetCard } from "../../components";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../context/ThemeContext";
 import { icons } from "../../constants/IconSizes";
 import { font_size } from "../../constants/FontSize";
 import { GetCommentCard } from "../../services/Comment/Comment";
 import { spacing_size } from "../../constants/Spacing";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
   const navigation = useNavigation();
+  const focused = useIsFocused();
   const [commentCard, setCommentCard] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
   const { themeColors } = useTheme();
-console.log(AsyncStorage.getItem("token"))
   const openDrawer = () => {
     navigation.openDrawer();
   };
   const getTodoCard = () => {
-    GetCommentCard().then((res) => setCommentCard(res));
+    setLoading(true);
+    GetCommentCard(page)
+      .then((res) => setCommentCard(res?.results))
+      .finally(() => setLoading(false));
   };
   useEffect(() => {
     getTodoCard();
-  }, []);
+    console.log("render");
+  }, [page]);
+  console.log(commentCard);
+
+  const handleLoadMore = () => {
+    console.log("more");
+  };
+  useEffect(() => {
+    const currentRoute =
+      navigation.getState().routeNames[navigation.getState().index];
+    localStorage.setItem("route", currentRoute);
+    console.log(currentRoute);
+  }, [focused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -64,6 +81,14 @@ console.log(AsyncStorage.getItem("token"))
           {commentCard.map((item) => (
             <ActionCard {...item} getFunc={getTodoCard} key={item.id} />
           ))}
+          <FlatList
+            data={commentCard}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <ActionCard {...item} getFunc={getTodoCard} key={item.id} />
+            )}
+            onEndReached={handleLoadMore}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

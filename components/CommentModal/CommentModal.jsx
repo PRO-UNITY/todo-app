@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     borderWidth: border.BORDER_DEFAULT,
     padding: spacing_size.SPACING_SMALL,
     borderRadius: rounded.ROUNDED_SM,
+    marginVertical: spacing_size.LETTER_SPACING_DEFAULT,
   },
   commentText: {
     fontSize: font_size.TEXT_SUBTITLE,

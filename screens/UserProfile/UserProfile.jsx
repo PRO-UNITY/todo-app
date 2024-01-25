@@ -13,29 +13,35 @@ import { useTheme } from "../../context/ThemeContext";
 import { font_size } from "../../constants/FontSize";
 import { icons } from "../../constants/IconSizes";
 import { colors } from "../../constants/Colors";
-import {
-  GetActiveFavorite,
-  GetCommentCard,
-} from "../../services/Comment/Comment";
+import { GetCommentCard } from "../../services/Comment/Comment";
 import { spacing_size } from "../../constants/Spacing";
 import { GetUser } from "../../services/Auth/Auth";
 import { rounded } from "../../constants/Corners";
 import { font_weight } from "../../constants/FontWeight";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 const UserProfile = ({ navigation }) => {
   const { themeColors } = useTheme();
+  const [page, setPage] = useState(1);
+  const focused = useIsFocused();
   const [commentCard, setCommentCard] = useState([]);
   const [user, setUser] = useState(null);
 
   const getTodoCard = () => {
-    GetCommentCard().then((res) => setCommentCard(res));
+    GetCommentCard(page).then((res) => setCommentCard(res?.results));
   };
 
   useEffect(() => {
     getTodoCard();
     GetUser().then((res) => setUser(res));
   }, []);
-  console.log(user);
+
+  useEffect(() => {
+    const currentRoute =
+      navigation.getState().routeNames[navigation.getState().index];
+    localStorage.setItem("route", currentRoute);
+    console.log(currentRoute);
+  }, [focused]);
   const handleBack = () => {
     navigation.navigate("HOME");
   };

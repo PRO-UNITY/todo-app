@@ -10,18 +10,26 @@ import { colors } from "../../constants/Colors";
 import { GetUsers } from "../../services/Auth/Auth";
 import { rounded } from "../../constants/Corners";
 import { border } from "../../constants/Border";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 const Users = ({ navigation }) => {
   const { themeColors } = useTheme();
+  const navigationRoot = useNavigation();
+  const focused = useIsFocused();
   const [user, setUser] = useState([]);
   const handleBack = () => {
     navigation.navigate("HOME");
   };
 
   useEffect(() => {
-    GetUsers().then((res) => setUser(res));
+    GetUsers().then((res) => setUser(res?.results));
   }, []);
-  console.log(user);
+
+  useEffect(() => {
+    const currentRoute =
+      navigationRoot.getState().routeNames[navigationRoot.getState().index];
+    localStorage.setItem("route", currentRoute);
+  }, [focused]);
   return (
     <View style={styles.container}>
       <View
