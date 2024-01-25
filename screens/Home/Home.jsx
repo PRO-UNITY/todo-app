@@ -15,12 +15,13 @@ import { icons } from "../../constants/IconSizes";
 import { font_size } from "../../constants/FontSize";
 import { GetCommentCard } from "../../services/Comment/Comment";
 import { spacing_size } from "../../constants/Spacing";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
   const navigation = useNavigation();
   const [commentCard, setCommentCard] = useState([]);
   const { themeColors } = useTheme();
-
+console.log(AsyncStorage.getItem("token"))
   const openDrawer = () => {
     navigation.openDrawer();
   };
