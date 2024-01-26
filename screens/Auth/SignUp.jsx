@@ -16,6 +16,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 const SignUp = ({ navigation }) => {
   const { themeColors } = useTheme();
   const navigationRoot = useNavigation();
+  const [loading, setLoading] = useState(false);
   const focused = useIsFocused();
   const [errorShow, setErrorShow] = useState(false);
   const [signUpData, setSignUpData] = useState({
@@ -53,12 +54,17 @@ const SignUp = ({ navigation }) => {
       setErrorShow(true);
       return;
     }
+    setLoading(true);
     SignUpUser(signUpData)
       .then(async (res) => {
         await AsyncStorage.setItem("token", res?.token?.access);
         navigation.navigate("HOME");
+        setLoading(true);
       })
-      .catch(() => setErrorShow(true));
+      .catch(() => {
+        setErrorShow(true);
+        setLoading(true);
+      });
   };
   useEffect(() => {
     const currentRoute =
@@ -84,7 +90,7 @@ const SignUp = ({ navigation }) => {
           Twittwer
         </Text>
       </View>
-      <View style={styles.inputBox}>
+      <form style={styles.inputBox}>
         <TextField
           placeholderText={"Username"}
           onChangeText={(text) => handleInputChange("username", text)}
@@ -117,7 +123,7 @@ const SignUp = ({ navigation }) => {
           onChangeText={(text) => handleInputChange("confirm_password", text)}
           error={inputErrors.confirm_password}
         />
-      </View>
+      </form>
       {errorShow && (
         <Text style={styles.errorMsg}>
           Please fill in all the required fields
@@ -125,9 +131,13 @@ const SignUp = ({ navigation }) => {
       )}
       <View style={styles.loginBtn}>
         <Button btnFunc={handleSignUp}>
-          <Text style={[styles.text, { color: themeColors.textPrimary }]}>
-            Sign Up
-          </Text>
+          {loading ? (
+            <ActivityIndicator color={colors.DARK_THIRDSTY} />
+          ) : (
+            <Text style={[styles.text, { color: themeColors.textPrimary }]}>
+              Sign up
+            </Text>
+          )}
         </Button>
       </View>
       <Pressable onPress={() => navigation.navigate("LOGIN")}>
@@ -169,6 +179,8 @@ const styles = StyleSheet.create({
   inputBox: {
     gap: spacing_size.SPACING_SMALL,
     marginVertical: spacing_size.SPACING_SMALL,
+    display: "flex",
+    flexDirection: "column",
   },
   text: {
     fontSize: font_size.TEXT_SUBTITLE,

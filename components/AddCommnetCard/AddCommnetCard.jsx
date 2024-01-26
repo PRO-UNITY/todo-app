@@ -8,13 +8,13 @@ import Button from "../Button/Button";
 import { CreateTodoCard } from "../../services/CreateTodo/CreateTodo";
 import { spacing_size } from "../../constants/Spacing";
 
-const AddCommnetCard = ({ getFunc }) => {
+const AddCommnetCard = ({ setCommentCard }) => {
   const [todo, setTodo] = useState({ title: "" });
 
   const CreateTodoHandle = () => {
     CreateTodoCard(todo)
       .then(async (res) => {
-        getFunc();
+        setCommentCard((prevCommentCard) => [...prevCommentCard, todo]);
         setTodo((prevData) => ({ ...prevData, title: "" }));
       })
       .catch((err) => console.log(err));

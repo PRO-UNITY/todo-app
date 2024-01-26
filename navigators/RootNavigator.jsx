@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   ForgetPassword,
@@ -9,7 +9,6 @@ import {
   Users,
 } from "../screens";
 import { CustomDrawer } from "../components";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 const InitialRoute = localStorage.getItem("route");
@@ -24,14 +23,14 @@ const RootNavigator = () => {
       initialRouteName={InitialRoute}
     >
       <Drawer.Screen
-        name="SIGNUP"
-        options={{ title: "Sign up" }}
-        component={SignUp}
-      />
-      <Drawer.Screen
         name="LOGIN"
         options={{ title: "Sign in" }}
         component={Login}
+      />
+      <Drawer.Screen
+        name="SIGNUP"
+        options={{ title: "Sign up" }}
+        component={SignUp}
       />
       <Drawer.Screen
         name="USERS"

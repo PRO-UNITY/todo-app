@@ -25,11 +25,11 @@ const Users = ({ navigation }) => {
     GetUsers().then((res) => setUser(res?.results));
   }, []);
 
-  useEffect(() => {
-    const currentRoute =
-      navigationRoot.getState().routeNames[navigationRoot.getState().index];
-    localStorage.setItem("route", currentRoute);
-  }, [focused]);
+  // useEffect(() => {
+  //   const currentRoute =
+  //     navigationRoot.getState().routeNames[navigationRoot.getState().index];
+  //   localStorage.setItem("route", currentRoute);
+  // }, [focused]);
   return (
     <View style={styles.container}>
       <View

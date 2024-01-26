@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   SafeAreaView,
   Pressable,
   FlatList,
@@ -24,29 +23,35 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const { themeColors } = useTheme();
+
   const openDrawer = () => {
     navigation.openDrawer();
   };
   const getTodoCard = () => {
     setLoading(true);
     GetCommentCard(page)
-      .then((res) => setCommentCard(res?.results))
+      .then((res) =>
+        setCommentCard((prevCommentCard) => [
+          ...prevCommentCard,
+          ...res?.results,
+        ])
+      )
       .finally(() => setLoading(false));
   };
   useEffect(() => {
     getTodoCard();
-    console.log("render");
   }, [page]);
   console.log(commentCard);
 
   const handleLoadMore = () => {
-    console.log("more");
+    if (!loading) {
+      setPage(page + 1);
+    }
   };
   useEffect(() => {
     const currentRoute =
       navigation.getState().routeNames[navigation.getState().index];
     localStorage.setItem("route", currentRoute);
-    console.log(currentRoute);
   }, [focused]);
 
   return (
@@ -70,27 +75,17 @@ const Home = () => {
           </Text>
           <View />
         </View>
-        <AddCommetCard getFunc={getTodoCard} />
+        <AddCommetCard setCommentCard={setCommentCard} />
       </View>
-      <ScrollView
-        style={{
-          backgroundColor: themeColors.bgWhite,
-        }}
-      >
-        <View style={{ padding: spacing_size.SPACING }}>
-          {commentCard.map((item) => (
-            <ActionCard {...item} getFunc={getTodoCard} key={item.id} />
-          ))}
-          <FlatList
-            data={commentCard}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <ActionCard {...item} getFunc={getTodoCard} key={item.id} />
-            )}
-            onEndReached={handleLoadMore}
-          />
-        </View>
-      </ScrollView>
+      <FlatList
+        style={{ padding: spacing_size.SPACING }}
+        data={commentCard}
+        keyExtractor={(item) => item?.id}
+        renderItem={({ item }) => (
+          <ActionCard {...item} setCommentCard={setCommentCard} />
+        )}
+        onEndReached={handleLoadMore}
+      />
     </SafeAreaView>
   );
 };

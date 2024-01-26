@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
@@ -17,6 +23,7 @@ const Login = ({ navigation }) => {
   const navigationRoot = useNavigation();
   const focused = useIsFocused();
   const [errorShow, setErrorShow] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [inputErrors, setInputErrors] = useState({
     username: false,
     password: false,
@@ -30,8 +37,7 @@ const Login = ({ navigation }) => {
     setSignInData((prevData) => ({ ...prevData, [field]: value }));
     setInputErrors((prevErrors) => ({ ...prevErrors, [field]: false }));
   };
-
-  const handleLogin = () => {
+  const validation = () => {
     const emptyFields = Object.keys(signInData).filter(
       (field) => signInData[field].trim() === ""
     );
@@ -45,12 +51,21 @@ const Login = ({ navigation }) => {
       setErrorShow(true);
       return;
     }
+  };
+
+  const handleLogin = () => {
+    validation();
+    setLoading(true);
     SignInUser(signInData)
       .then(async (res) => {
         await AsyncStorage.setItem("token", res?.token?.access);
         navigation.navigate("HOME");
+        setLoading(false);
       })
-      .catch(() => setErrorShow(true));
+      .catch(() => {
+        setErrorShow(true);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -77,7 +92,7 @@ const Login = ({ navigation }) => {
           Twittwer
         </Text>
       </View>
-      <View style={styles.inputBox}>
+      <form style={styles.inputBox}>
         <TextField
           placeholderText={"Username"}
           onChangeText={(text) => handleInputChange("username", text)}
@@ -89,7 +104,7 @@ const Login = ({ navigation }) => {
           secureTextEntry
           error={inputErrors.password}
         />
-      </View>
+      </form>
       <Pressable onPress={() => navigation.navigate("FORGET_PASSWORD")}>
         <Text style={[styles.forgetPass, { color: themeColors.textPrimary }]}>
           Forget Password?
@@ -100,9 +115,13 @@ const Login = ({ navigation }) => {
       )}
       <View style={styles.loginBtn}>
         <Button btnFunc={handleLogin}>
-          <Text style={[styles.text, { color: themeColors.textPrimary }]}>
-            Login
-          </Text>
+          {loading ? (
+            <ActivityIndicator color={colors.DARK_THIRDSTY} />
+          ) : (
+            <Text style={[styles.text, { color: themeColors.textPrimary }]}>
+              Login
+            </Text>
+          )}
         </Button>
       </View>
       <Pressable onPress={() => navigation.navigate("SIGNUP")}>
@@ -136,6 +155,8 @@ const styles = StyleSheet.create({
     letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
   },
   inputBox: {
+    display: "flex",
+    flexDirection: "column",
     gap: spacing_size.SPACING_SMALL,
     marginVertical: spacing_size.SPACING_SMALL,
   },

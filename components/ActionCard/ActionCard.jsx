@@ -25,34 +25,32 @@ const ActionCard = ({
   favorite_count,
   comment_count,
   favorite,
-  getFunc,
+  setCommentCard,
 }) => {
   const [isShowComment, setIsShowComment] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [commentData, setcommentData] = useState({ todo: id, comment: "" });
   const { themeColors } = useTheme();
+
   const handleActiveFavorite = () => {
     if (favorite) {
-      isRemoveFavorite(id).then(async (res) => {
-        getFunc();
-      });
+      isRemoveFavorite(id).then(async (res) => {});
     } else {
-      isActiveFavorite({ todo: id, is_favorite: true }).then(async (res) => {
-        getFunc();
-      });
+      isActiveFavorite({ todo: id, is_favorite: true }).then(async (res) => {});
     }
   };
   const getCommnetData = (text) => {
     setcommentData((prevData) => ({ ...prevData, comment: text }));
   };
   const handleAddComment = () => {
-    AddCommentTodo(commentData)
-      .then(async (res) => {
-        getFunc();
-        setcommentData((prevData) => ({ ...prevData, comment: "" }));
-        setIsShowComment(false);
-      })
-      .catch((err) => console.log(err));
+    setCommentCard((prevCommentCard) => console.log(prevCommentCard));
+    // AddCommentTodo(commentData)
+    //   .then(async () => {
+
+    //     setcommentData((prevData) => ({ ...prevData, comment: "" }));
+    //     setIsShowComment(false);
+    //   })
+    //   .catch((err) => console.log(err));
   };
   return (
     <SafeAreaView
