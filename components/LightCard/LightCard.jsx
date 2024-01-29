@@ -1,10 +1,7 @@
-import { Text, SafeAreaView, StyleSheet, View } from "react-native";
 import React from "react";
+import { Text, SafeAreaView, StyleSheet, View } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { font_size } from "../../constants/FontSize";
-import { colors } from "../../constants/Colors";
-import { spacing_size } from "../../constants/Spacing";
-import { rounded } from "../../constants/Corners";
+import { colors, font_size, rounded, spacing_size } from "../../constants";
 
 const LightCard = ({ comment, user }) => {
   const { themeColors } = useTheme();

@@ -1,99 +1,105 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, FlatList } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { ActionCard } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
-import { font_size } from "../../constants/FontSize";
-import { icons } from "../../constants/IconSizes";
-import { colors } from "../../constants/Colors";
-import { GetCommentCard } from "../../services/Comment/Comment";
-import { spacing_size } from "../../constants/Spacing";
-import { GetUser } from "../../services/Auth/Auth";
-import { rounded } from "../../constants/Corners";
-import { font_weight } from "../../constants/FontWeight";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  colors,
+  font_size,
+  font_weight,
+  icons,
+  rounded,
+  spacing_size,
+} from "../../constants";
+import { SaveStrageRoute } from "../../utils";
+import { GetCommentCard, GetUser } from "../../services";
+import { ActionCard, BackBtn } from "../../components";
 
 const UserProfile = ({ navigation }) => {
   const { themeColors } = useTheme();
-  const [page, setPage] = useState(1);
   const focused = useIsFocused();
-  const [commentCard, setCommentCard] = useState([]);
+  const [page, setPage] = useState(1);
+  const [realoadData, setRealoadData] = useState(false);
   const [user, setUser] = useState(null);
+  const [commentCard, setCommentCard] = useState([]);
+  const [error, setError] = useState(false);
 
-  const getTodoCard = () => {
-    GetCommentCard(page).then((res) => setCommentCard(res?.results));
+  const handleLoadMore = () => {
+    if (commentCard.length < 5) return;
+    setPage(page + 1);
   };
-
+  const getData = () => {
+    GetCommentCard(page)
+      .then((res) => {
+        setCommentCard(res.results);
+        setError(false);
+      })
+      .catch(() => setError(true));
+  };
+  const onTopReached = () => {
+    if (page > 1) {
+      setPage((prev) => prev - 1);
+      getData();
+    }
+  };
+  const onBottomReached = () => {
+    if (!error) {
+      setPage((prev) => prev + 1);
+      getData();
+    }
+  };
   useEffect(() => {
-    getTodoCard();
+    getData();
+    SaveStrageRoute(navigation);
     GetUser().then((res) => setUser(res));
-  }, []);
+  }, [realoadData, focused]);
 
-  useEffect(() => {
-    const currentRoute =
-      navigation.getState().routeNames[navigation.getState().index];
-    localStorage.setItem("route", currentRoute);
-    console.log(currentRoute);
-  }, [focused]);
-  const handleBack = () => {
-    navigation.navigate("HOME");
-  };
+  useEffect(() => SaveStrageRoute(navigation), [focused]);
+
   return (
-    <ScrollView style={{ backgroundColor: themeColors.bgWhite }}>
-      <SafeAreaView style={styles.container}>
-        <View
-          style={[
-            styles.heading,
-            { backgroundColor: themeColors.backgroundLight },
-          ]}
-        >
-          <View style={styles.backBtnBox}>
-            <Pressable
-              style={[styles.backBtn, { backgroundColor: themeColors.bgWhite }]}
-              onPress={handleBack}
-            >
-              <Icon
-                name="arrow-back"
-                color={themeColors.icon}
-                size={icons.DEFAULT_ICON}
-              />
-            </Pressable>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: themeColors.bgWhite }]}
+    >
+      <View
+        style={[
+          styles.heading,
+          { backgroundColor: themeColors.backgroundLight },
+        ]}
+      >
+        <BackBtn route={"HOME"} />
+        <View style={styles.prifileDataBox}>
+          <View
+            style={[
+              styles.profileImageBox,
+              { backgroundColor: themeColors.userImageBox },
+            ]}
+          >
+            <Icon
+              name="person"
+              size={icons.EXTRA_LARGE_ICON}
+              color={colors.LIGHT_PRIMARY}
+            />
           </View>
-          <View style={styles.prifileDataBox}>
-            <View
-              style={[
-                styles.profileImageBox,
-                { backgroundColor: themeColors.userImageBox },
-              ]}
-            >
-              <Icon
-                name="person"
-                size={icons.EXTRA_LARGE_ICON}
-                color={colors.LIGHT_PRIMARY}
-              />
-            </View>
-            <Text style={[styles.name, { color: themeColors.textPrimary }]}>
-              {user?.username}
-            </Text>
-            <Text style={[styles.gmail, { color: themeColors.subtitle }]}>
-              {user?.email}
-            </Text>
-          </View>
+          <Text style={[styles.name, { color: themeColors.textPrimary }]}>
+            {user?.username}
+          </Text>
+          <Text style={[styles.gmail, { color: themeColors.subtitle }]}>
+            {user?.email}
+          </Text>
         </View>
-        <View style={{ padding: spacing_size.SPACING }}>
-          {commentCard.map((item) => (
-            <ActionCard {...item} getFunc={getTodoCard} key={item.id} />
-          ))}
-        </View>
-      </SafeAreaView>
-    </ScrollView>
+      </View>
+      <FlatList
+        style={{ padding: spacing_size.SPACING }}
+        data={commentCard}
+        keyExtractor={(item) => item?.id?.toString()}
+        renderItem={({ item }) => (
+          <ActionCard {...item} setRealoadData={setRealoadData} />
+        )}
+        onStartReached={onTopReached}
+        onEndReached={onBottomReached}
+        onEndReachedThreshold={0.1}
+      />
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -105,14 +111,6 @@ const styles = StyleSheet.create({
     paddingTop: spacing_size.SPACING_LARGE,
     paddingBottom: spacing_size.SPACING,
     paddingHorizontal: spacing_size.SPACING,
-  },
-  backBtnBox: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-  },
-  backBtn: {
-    padding: spacing_size.SPACING_SMALL,
-    borderRadius: rounded.ROUNDED_CIRCLE,
   },
   prifileDataBox: {
     alignItems: "center",

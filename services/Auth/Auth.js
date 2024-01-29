@@ -1,6 +1,6 @@
 import axios from "axios";
-import { BASE_URL } from "../../utils/baseUrl";
-import api from "../../utils/FetchApi";
+import { api2 } from "../../utils";
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL2;
 
 export const SignUpUser = async (data) => {
   const response = await axios.post(`${BASE_URL}/auth/signup`, data);
@@ -11,10 +11,10 @@ export const SignInUser = async (data) => {
   return response.data;
 };
 export const GetUsers = async () => {
-  const response = await api.get(`/auth/users`);
+  const response = await api2.get(`/auth/users`);
   return response.data;
 };
 export const GetUser = async () => {
-  const response = await api.get(`/auth/user`);
+  const response = await api2.get(`/auth/user`);
   return response.data;
 };

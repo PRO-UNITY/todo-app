@@ -1,16 +1,28 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "./baseUrl";
-import { useNavigation } from "@react-navigation/native";
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+});
+const api2 = axios.create({
+  baseURL: process.env.EXPO_PUBLIC_API_URL2,
 });
 
 api.interceptors.request.use(
   async (config) => {
     const authToken = await AsyncStorage.getItem("token");
-
+    if (authToken) {
+      config.headers.Authorization = authToken;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+api2.interceptors.request.use(
+  async (config) => {
+    const authToken = await AsyncStorage.getItem("token");
     if (authToken) {
       config.headers.Authorization = `Bearer ${authToken}`;
     }
@@ -23,18 +35,13 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log("auth");
     return response;
   },
   async (error) => {
     if (error.response && error.response.status === 401) {
-      const navigation = useNavigation();
-      AsyncStorage.clear();
-      navigation.navigate("Login");
     }
-
     return Promise.reject(error);
   }
 );
 
-export default api;
+export { api, api2 };

@@ -1,20 +1,18 @@
-import { View, StyleSheet } from "react-native";
 import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors } from "../../constants/Colors";
-import { icons } from "../../constants/IconSizes";
-import TextField from "../TextField/TextField";
 import Button from "../Button/Button";
 import { CreateTodoCard } from "../../services/CreateTodo/CreateTodo";
-import { spacing_size } from "../../constants/Spacing";
+import { colors, icons, spacing_size } from "../../constants";
+import TextField from "../TextField/TextField";
 
-const AddCommnetCard = ({ setCommentCard }) => {
+const AddCommnetCard = ({ setRealoadData }) => {
   const [todo, setTodo] = useState({ title: "" });
 
   const CreateTodoHandle = () => {
     CreateTodoCard(todo)
-      .then(async (res) => {
-        setCommentCard((prevCommentCard) => [...prevCommentCard, todo]);
+      .then(async () => {
+        setRealoadData((prev) => !prev);
         setTodo((prevData) => ({ ...prevData, title: "" }));
       })
       .catch((err) => console.log(err));

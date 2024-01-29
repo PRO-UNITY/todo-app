@@ -6,60 +6,46 @@ import {
   Text,
   View,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
-import { icons } from "../../constants/IconSizes";
-import { font_size } from "../../constants/FontSize";
-import { colors } from "../../constants/Colors";
-import { SignInUser } from "../../services/Auth/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { spacing_size } from "../../constants/Spacing";
-import { font_weight } from "../../constants/FontWeight";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  colors,
+  font_size,
+  font_weight,
+  icons,
+  spacing_size,
+} from "../../constants";
+import { SignInUser } from "../../services";
+import {
+  SaveStrageRoute,
+  changeFiled,
+  handleInputValidation,
+  validationInput,
+} from "../../utils";
+import { getUserData, userData } from "./User";
 
 const Login = ({ navigation }) => {
   const { themeColors } = useTheme();
-  const navigationRoot = useNavigation();
   const focused = useIsFocused();
   const [errorShow, setErrorShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [inputErrors, setInputErrors] = useState({
-    username: false,
-    password: false,
-  });
-  const [signInData, setSignInData] = useState({
-    username: "",
-    password: "",
-  });
 
   const handleInputChange = (field, value) => {
-    setSignInData((prevData) => ({ ...prevData, [field]: value }));
-    setInputErrors((prevErrors) => ({ ...prevErrors, [field]: false }));
-  };
-  const validation = () => {
-    const emptyFields = Object.keys(signInData).filter(
-      (field) => signInData[field].trim() === ""
-    );
-
-    if (emptyFields.length > 0) {
-      const errors = {};
-      emptyFields.forEach((field) => {
-        errors[field] = true;
-      });
-      setInputErrors(errors);
-      setErrorShow(true);
-      return;
-    }
+    getUserData(field, value);
+    changeFiled(field);
   };
 
   const handleLogin = () => {
-    validation();
+    handleInputValidation(userData);
     setLoading(true);
-    SignInUser(signInData)
+    SignInUser({ username: userData.username, password: userData.password })
       .then(async (res) => {
-        await AsyncStorage.setItem("token", res?.token?.access);
+        await AsyncStorage.setItem("token", res?.access);
         navigation.navigate("HOME");
+        setErrorShow(false);
         setLoading(false);
       })
       .catch(() => {
@@ -68,12 +54,7 @@ const Login = ({ navigation }) => {
       });
   };
 
-  useEffect(() => {
-    const currentRoute =
-      navigationRoot.getState().routeNames[navigationRoot.getState().index];
-    localStorage.setItem("route", currentRoute);
-    console.log(currentRoute);
-  }, [focused]);
+  useEffect(() => SaveStrageRoute(navigation), [focused]);
 
   return (
     <View
@@ -92,19 +73,19 @@ const Login = ({ navigation }) => {
           Twittwer
         </Text>
       </View>
-      <form style={styles.inputBox}>
+      <View style={styles.inputBox}>
         <TextField
           placeholderText={"Username"}
           onChangeText={(text) => handleInputChange("username", text)}
-          error={inputErrors.username}
+          error={validationInput.username}
         />
         <TextField
           placeholderText={"Password"}
           onChangeText={(text) => handleInputChange("password", text)}
           secureTextEntry
-          error={inputErrors.password}
+          error={validationInput.password}
         />
-      </form>
+      </View>
       <Pressable onPress={() => navigation.navigate("FORGET_PASSWORD")}>
         <Text style={[styles.forgetPass, { color: themeColors.textPrimary }]}>
           Forget Password?

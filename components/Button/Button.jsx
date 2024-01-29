@@ -1,8 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { rounded } from "../../constants/Corners";
-import { spacing_size } from "../../constants/Spacing";
+import { rounded, spacing_size } from "../../constants";
 
 const Button = ({ children, btnFunc }) => {
   const { themeColors } = useTheme();

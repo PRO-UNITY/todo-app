@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   ForgetPassword,
@@ -9,11 +9,15 @@ import {
   Users,
 } from "../screens";
 import { CustomDrawer } from "../components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Drawer = createDrawerNavigator();
-const InitialRoute = localStorage.getItem("route");
 
 const RootNavigator = () => {
+  const InitialRoute = AsyncStorage.getItem("route").then();
+  const [initialRoute, setinitialRoute] = useState(null);
+  console.log(initialRoute);
+  InitialRoute.then((res) => setinitialRoute(res));
   return (
     <Drawer.Navigator
       drawerContent={() => <CustomDrawer />}

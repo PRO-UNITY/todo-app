@@ -5,3 +5,4 @@ export { default as CustomDrawer } from "./CustomDrawer/CustomDrawer";
 export { default as AddCommetCard } from "./AddCommnetCard/AddCommnetCard";
 export { default as AddComment } from "./AddComment/AddComment";
 export { default as CommentModal } from "./CommentModal/CommentModal";
+export { default as BackBtn } from "./BackBtn/BackBtn";

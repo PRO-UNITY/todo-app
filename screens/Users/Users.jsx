@@ -1,35 +1,31 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useTheme } from "../../context/ThemeContext";
-import { spacing_size } from "../../constants/Spacing";
-import { font_size } from "../../constants/FontSize";
-import { font_weight } from "../../constants/FontWeight";
-import { icons } from "../../constants/IconSizes";
-import { colors } from "../../constants/Colors";
-import { GetUsers } from "../../services/Auth/Auth";
-import { rounded } from "../../constants/Corners";
-import { border } from "../../constants/Border";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  border,
+  colors,
+  font_size,
+  font_weight,
+  icons,
+  rounded,
+  spacing_size,
+} from "../../constants";
+import { GetUsers } from "../../services";
+import { SaveStrageRoute } from "../../utils";
+import { BackBtn } from "../../components";
 
 const Users = ({ navigation }) => {
   const { themeColors } = useTheme();
-  const navigationRoot = useNavigation();
   const focused = useIsFocused();
   const [user, setUser] = useState([]);
-  const handleBack = () => {
-    navigation.navigate("HOME");
-  };
 
   useEffect(() => {
-    GetUsers().then((res) => setUser(res?.results));
-  }, []);
+    GetUsers().then((res) => setUser(res?.results)),
+      SaveStrageRoute(navigation);
+  }, [focused]);
 
-  // useEffect(() => {
-  //   const currentRoute =
-  //     navigationRoot.getState().routeNames[navigationRoot.getState().index];
-  //   localStorage.setItem("route", currentRoute);
-  // }, [focused]);
   return (
     <View style={styles.container}>
       <View
@@ -38,27 +34,12 @@ const Users = ({ navigation }) => {
           { backgroundColor: themeColors.backgroundLight },
         ]}
       >
-        <View style={styles.backBtnBox}>
-          <Pressable
-            style={[styles.backBtn, { backgroundColor: themeColors.bgWhite }]}
-            onPress={handleBack}
-          >
-            <Icon
-              name="arrow-back"
-              color={themeColors.icon}
-              size={icons.DEFAULT_ICON}
-            />
-          </Pressable>
-        </View>
+        <BackBtn route={"HOME"} />
         <Text style={[styles.title, { color: themeColors.textPrimary }]}>
           Users
         </Text>
       </View>
-      <ScrollView
-        style={{
-          backgroundColor: themeColors.bgWhite,
-        }}
-      >
+      <ScrollView style={{ backgroundColor: themeColors.bgWhite }}>
         {user.map((item) => (
           <View
             key={item.id}
@@ -94,14 +75,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
     fontWeight: font_weight.FONT_BOLD,
-  },
-  backBtnBox: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-  },
-  backBtn: {
-    padding: spacing_size.SPACING_SMALL,
-    borderRadius: rounded.ROUNDED_CIRCLE,
   },
   userCard: {
     flexDirection: "row",

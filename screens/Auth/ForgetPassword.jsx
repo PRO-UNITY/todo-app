@@ -1,26 +1,14 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Button, TextField } from "../../components";
+import { BackBtn, Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
-import { icons } from "../../constants/IconSizes";
-import { font_size } from "../../constants/FontSize";
-import { spacing_size } from "../../constants/Spacing";
-import { font_weight } from "../../constants/FontWeight";
-import { colors } from "../../constants/Colors";
-import { rounded } from "../../constants/Corners";
+import { colors, font_size, font_weight, icons, rounded, spacing_size } from "../../constants";
 
-const ForgetPassword = ({ navigation }) => {
+const ForgetPassword = () => {
   const { themeColors } = useTheme();
   const [errorShow, setErrorShow] = useState(false);
   const [email, setEmail] = useState("");
-
-  const handleLogin = () => {
-    console.log(email);
-  };
-  const handleBack = () => {
-    navigation.navigate("LOGIN");
-  };
 
   return (
     <View
@@ -30,16 +18,7 @@ const ForgetPassword = ({ navigation }) => {
       ]}
     >
       <View style={styles.backBtnBox}>
-        <Pressable
-          style={[styles.backBtn, { backgroundColor: themeColors.bgWhite }]}
-          onPress={handleBack}
-        >
-          <Icon
-            name="arrow-back"
-            color={themeColors.icon}
-            size={icons.DEFAULT_ICON}
-          />
-        </Pressable>
+        <BackBtn route={"LOGIN"} />
       </View>
       <View style={styles.loginHead}>
         <Icon
@@ -59,7 +38,7 @@ const ForgetPassword = ({ navigation }) => {
         <Text style={styles.errorMsg}>Incorrect username or password</Text>
       )}
       <View style={styles.loginBtn}>
-        <Button btnFunc={handleLogin}>
+        <Button>
           <Text style={[styles.text, { color: themeColors.textPrimary }]}>
             Reset Password
           </Text>

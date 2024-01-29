@@ -1,7 +1,7 @@
-import api from "../../utils/FetchApi";
+import { api } from "../../utils";
 
 export const GetCommentCard = async (page) => {
-  const response = await api.get(`/todos?page=${page}&limit=5`);
+  const response = await api.get(`/todos?page=${page}&limit=10`);
   return response.data;
 };
 export const isActiveFavorite = async (data) => {

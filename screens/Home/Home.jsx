@@ -6,53 +6,56 @@ import {
   SafeAreaView,
   Pressable,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { ActionCard, AddCommetCard } from "../../components";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../context/ThemeContext";
-import { icons } from "../../constants/IconSizes";
-import { font_size } from "../../constants/FontSize";
-import { GetCommentCard } from "../../services/Comment/Comment";
-import { spacing_size } from "../../constants/Spacing";
+import { colors, font_size, icons, spacing_size } from "../../constants";
+import { GetCommentCard } from "../../services";
+import { ActionCard, AddCommetCard } from "../../components";
+import { SaveStrageRoute } from "../../utils";
 
-const Home = () => {
-  const navigation = useNavigation();
+const Home = ({ navigation }) => {
   const focused = useIsFocused();
-  const [commentCard, setCommentCard] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
   const { themeColors } = useTheme();
+  const [commentCard, setCommentCard] = useState([]);
+  const [page, setPage] = useState(1);
+  const [realoadData, setRealoadData] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const openDrawer = () => {
-    navigation.openDrawer();
-  };
-  const getTodoCard = () => {
+  const openDrawer = () => navigation.openDrawer();
+
+  const getData = () => {
     setLoading(true);
     GetCommentCard(page)
-      .then((res) =>
-        setCommentCard((prevCommentCard) => [
-          ...prevCommentCard,
-          ...res?.results,
-        ])
-      )
-      .finally(() => setLoading(false));
+      .then((res) => {
+        setCommentCard(res.results);
+        setError(false);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
   };
-  useEffect(() => {
-    getTodoCard();
-  }, [page]);
-  console.log(commentCard);
-
-  const handleLoadMore = () => {
-    if (!loading) {
-      setPage(page + 1);
+  const onTopReached = () => {
+    if (page > 1) {
+      setPage((prev) => prev - 1);
+      getData();
+    }
+  };
+  const onBottomReached = () => {
+    if (!error) {
+      setPage((prev) => prev + 1);
+      getData();
     }
   };
   useEffect(() => {
-    const currentRoute =
-      navigation.getState().routeNames[navigation.getState().index];
-    localStorage.setItem("route", currentRoute);
-  }, [focused]);
+    getData();
+    SaveStrageRoute(navigation);
+  }, [realoadData, focused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,17 +78,32 @@ const Home = () => {
           </Text>
           <View />
         </View>
-        <AddCommetCard setCommentCard={setCommentCard} />
+        <AddCommetCard setRealoadData={setRealoadData} />
       </View>
-      <FlatList
-        style={{ padding: spacing_size.SPACING }}
-        data={commentCard}
-        keyExtractor={(item) => item?.id}
-        renderItem={({ item }) => (
-          <ActionCard {...item} setCommentCard={setCommentCard} />
-        )}
-        onEndReached={handleLoadMore}
-      />
+      {loading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text>
+            <ActivityIndicator
+              size={icons.EXTRA_LARGE_ICON}
+              color={colors.DARK_THIRDSTY}
+            />
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          style={{ padding: spacing_size.SPACING }}
+          data={commentCard}
+          keyExtractor={(item) => item?.id?.toString()}
+          renderItem={({ item }) => (
+            <ActionCard {...item} setRealoadData={setRealoadData} />
+          )}
+          onStartReached={onTopReached}
+          onEndReached={onBottomReached}
+          onEndReachedThreshold={0.1}
+        />
+      )}
     </SafeAreaView>
   );
 };

@@ -1,11 +1,6 @@
 import { View, Modal, Pressable, StyleSheet, Text } from "react-native";
-import { spacing_size } from "../../constants/Spacing";
-import { colors } from "../../constants/Colors";
-import { font_size } from "../../constants/FontSize";
 import { useTheme } from "../../context/ThemeContext";
-import { font_weight } from "../../constants/FontWeight";
-import { border } from "../../constants/Border";
-import { rounded } from "../../constants/Corners";
+import { border, colors, font_size, font_weight, rounded, spacing_size } from "../../constants";
 
 const CommentModal = ({
   modalVisible,

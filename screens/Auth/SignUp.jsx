@@ -1,154 +1,141 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
-import { icons } from "../../constants/IconSizes";
-import { font_size } from "../../constants/FontSize";
-import { colors } from "../../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SignUpUser } from "../../services/Auth/Auth";
-import { spacing_size } from "../../constants/Spacing";
-import { font_weight } from "../../constants/FontWeight";
-import { rounded } from "../../constants/Corners";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { SignUpUser } from "../../services";
+import { getUserData, userData } from "./User";
+import {
+  colors,
+  font_size,
+  font_weight,
+  icons,
+  rounded,
+  spacing_size,
+} from "../../constants";
+import {
+  validationInput,
+  handleInputValidation,
+  SaveStrageRoute,
+  changeFiled,
+} from "../../utils";
 
 const SignUp = ({ navigation }) => {
   const { themeColors } = useTheme();
-  const navigationRoot = useNavigation();
-  const [loading, setLoading] = useState(false);
   const focused = useIsFocused();
+  const [loading, setLoading] = useState(false);
   const [errorShow, setErrorShow] = useState(false);
-  const [signUpData, setSignUpData] = useState({
-    username: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-  });
-  const [inputErrors, setInputErrors] = useState({
-    username: false,
-    first_name: false,
-    last_name: false,
-    email: false,
-    password: false,
-    confirm_password: false,
-  });
 
   const handleInputChange = (field, value) => {
-    setSignUpData((prevData) => ({ ...prevData, [field]: value }));
-    setInputErrors((prevErrors) => ({ ...prevErrors, [field]: false }));
+    getUserData(field, value);
+    changeFiled(field);
   };
-  const handleSignUp = () => {
-    const emptyFields = Object.keys(signUpData).filter(
-      (field) => signUpData[field].trim() === ""
-    );
 
-    if (emptyFields.length > 0) {
-      const errors = {};
-      emptyFields.forEach((field) => {
-        errors[field] = true;
-      });
-      setInputErrors(errors);
-      setErrorShow(true);
-      return;
-    }
+  const handleSignUp = () => {
+    handleInputValidation(userData);
     setLoading(true);
-    SignUpUser(signUpData)
+    SignUpUser(userData)
       .then(async (res) => {
-        await AsyncStorage.setItem("token", res?.token?.access);
+        await AsyncStorage.setItem("token", res?.access);
         navigation.navigate("HOME");
-        setLoading(true);
+        setErrorShow(true);
+        setLoading(false);
       })
       .catch(() => {
         setErrorShow(true);
-        setLoading(true);
+        setLoading(false);
       });
   };
-  useEffect(() => {
-    const currentRoute =
-      navigationRoot.getState().routeNames[navigationRoot.getState().index];
-    localStorage.setItem("route", currentRoute);
-    console.log(currentRoute);
-  }, [focused]);
+
+  useEffect(() => SaveStrageRoute(navigation), [focused]);
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: themeColors.backgroundLight },
-      ]}
-    >
-      <View style={styles.loginHead}>
-        <Icon
-          name="person"
-          color={themeColors.icon}
-          size={icons.EXTRA_LARGE_ICON}
-        />
-        <Text style={[styles.loginTitle, { color: themeColors.textPrimary }]}>
-          Twittwer
-        </Text>
-      </View>
-      <form style={styles.inputBox}>
-        <TextField
-          placeholderText={"Username"}
-          onChangeText={(text) => handleInputChange("username", text)}
-          error={inputErrors.username}
-        />
-        <TextField
-          placeholderText={"FirstName"}
-          onChangeText={(text) => handleInputChange("first_name", text)}
-          error={inputErrors.first_name}
-        />
-        <TextField
-          placeholderText={"LastName"}
-          onChangeText={(text) => handleInputChange("last_name", text)}
-          error={inputErrors.last_name}
-        />
-        <TextField
-          placeholderText={"Email"}
-          onChangeText={(text) => handleInputChange("email", text)}
-          error={inputErrors.email}
-        />
-        <TextField
-          secureTextEntry
-          placeholderText={"Password"}
-          onChangeText={(text) => handleInputChange("password", text)}
-          error={inputErrors.password}
-        />
-        <TextField
-          secureTextEntry
-          placeholderText={"Confirm Password"}
-          onChangeText={(text) => handleInputChange("confirm_password", text)}
-          error={inputErrors.confirm_password}
-        />
-      </form>
-      {errorShow && (
-        <Text style={styles.errorMsg}>
-          Please fill in all the required fields
-        </Text>
-      )}
-      <View style={styles.loginBtn}>
-        <Button btnFunc={handleSignUp}>
-          {loading ? (
-            <ActivityIndicator color={colors.DARK_THIRDSTY} />
-          ) : (
-            <Text style={[styles.text, { color: themeColors.textPrimary }]}>
-              Sign up
-            </Text>
-          )}
-        </Button>
-      </View>
-      <Pressable onPress={() => navigation.navigate("LOGIN")}>
-        <Text style={[styles.registerLink]}>
-          Already have a account?{" "}
-          <Text style={[styles.textBold, { color: themeColors.textPrimary }]}>
-            Sign in
+    <ScrollView style={{ backgroundColor: themeColors.backgroundLight }}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: themeColors.backgroundLight },
+        ]}
+      >
+        <View style={styles.loginHead}>
+          <Icon
+            name="person"
+            color={themeColors.icon}
+            size={icons.EXTRA_LARGE_ICON}
+          />
+          <Text style={[styles.loginTitle, { color: themeColors.textPrimary }]}>
+            Twittwer
           </Text>
-        </Text>
-      </Pressable>
-    </View>
+        </View>
+        <View style={styles.inputBox}>
+          <TextField
+            placeholderText={"Username"}
+            onChangeText={(text) => handleInputChange("username", text)}
+            error={validationInput.username}
+          />
+          <TextField
+            placeholderText={"FirstName"}
+            onChangeText={(text) => handleInputChange("first_name", text)}
+            error={validationInput.first_name}
+          />
+          <TextField
+            placeholderText={"LastName"}
+            onChangeText={(text) => handleInputChange("last_name", text)}
+            error={validationInput.last_name}
+          />
+          <TextField
+            placeholderText={"Email"}
+            onChangeText={(text) => handleInputChange("email", text)}
+            error={validationInput.email}
+          />
+          <TextField
+            secureTextEntry
+            placeholderText={"Password"}
+            onChangeText={(text) => handleInputChange("password", text)}
+            error={validationInput.password}
+          />
+          <TextField
+            secureTextEntry
+            placeholderText={"Confirm Password"}
+            onChangeText={(text) => handleInputChange("confirm_password", text)}
+            error={validationInput.confirm_password}
+          />
+        </View>
+        {errorShow && (
+          <Text style={styles.errorMsg}>
+            Please fill in all the required fields
+          </Text>
+        )}
+        <View style={styles.loginBtn}>
+          <Button btnFunc={handleSignUp}>
+            {loading ? (
+              <ActivityIndicator color={colors.DARK_THIRDSTY} />
+            ) : (
+              <Text style={[styles.text, { color: themeColors.textPrimary }]}>
+                Sign up
+              </Text>
+            )}
+          </Button>
+        </View>
+        <Pressable onPress={() => navigation.navigate("LOGIN")}>
+          <Text style={[styles.registerLink]}>
+            Already have a account?{" "}
+            <Text style={[styles.textBold, { color: themeColors.textPrimary }]}>
+              Sign in
+            </Text>
+          </Text>
+        </Pressable>
+      </View>
+    </ScrollView>
   );
 };
 

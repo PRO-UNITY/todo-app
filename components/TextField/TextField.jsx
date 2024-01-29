@@ -1,10 +1,7 @@
-import { StyleSheet, TextInput, View } from "react-native";
 import React from "react";
+import { StyleSheet, TextInput, View } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { colors } from "../../constants/Colors";
-import { spacing_size } from "../../constants/Spacing";
-import { rounded } from "../../constants/Corners";
-import { border } from "../../constants/Border";
+import { border, colors, rounded, spacing_size } from "../../constants";
 
 const TextField = ({
   placeholderText,
@@ -22,7 +19,6 @@ const TextField = ({
           styles.input,
           {
             borderColor: error ? colors.ERROR_MSG : themeColors.inputBorder,
-            outline: border.BORDER_NONE,
           },
         ]}
         placeholderTextColor={colors.LIGHT_FOURTY}

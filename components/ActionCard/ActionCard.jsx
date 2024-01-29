@@ -3,19 +3,21 @@ import React, { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import LightCard from "../LightCard/LightCard";
 import { useTheme } from "../../context/ThemeContext";
-import { icons } from "../../constants/IconSizes";
-import { colors } from "../../constants/Colors";
-import { font_size } from "../../constants/FontSize";
 import CommentModal from "../CommentModal/CommentModal";
+import AddComment from "../AddComment/AddComment";
 import {
   AddCommentTodo,
   isActiveFavorite,
   isRemoveFavorite,
-} from "../../services/Comment/Comment";
-import AddComment from "../AddComment/AddComment";
-import { spacing_size } from "../../constants/Spacing";
-import { font_weight } from "../../constants/FontWeight";
-import { border } from "../../constants/Border";
+} from "../../services";
+import {
+  border,
+  colors,
+  font_size,
+  font_weight,
+  icons,
+  spacing_size,
+} from "../../constants";
 
 const ActionCard = ({
   id,
@@ -25,32 +27,38 @@ const ActionCard = ({
   favorite_count,
   comment_count,
   favorite,
-  setCommentCard,
+  setRealoadData,
 }) => {
+  const { themeColors } = useTheme();
   const [isShowComment, setIsShowComment] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [commentData, setcommentData] = useState({ todo: id, comment: "" });
-  const { themeColors } = useTheme();
+  const [isFavorite, setIsFavorite] = useState(favorite);
 
   const handleActiveFavorite = () => {
-    if (favorite) {
-      isRemoveFavorite(id).then(async (res) => {});
+    if (isFavorite) {
+      isRemoveFavorite(id).then(async () => {
+        setIsFavorite(false);
+        setRealoadData((prev) => !prev);
+      });
     } else {
-      isActiveFavorite({ todo: id, is_favorite: true }).then(async (res) => {});
+      isActiveFavorite({ todo: id, is_favorite: true }).then(async (res) => {
+        setIsFavorite(true);
+        setRealoadData((prev) => !prev);
+      });
     }
   };
   const getCommnetData = (text) => {
     setcommentData((prevData) => ({ ...prevData, comment: text }));
   };
   const handleAddComment = () => {
-    setCommentCard((prevCommentCard) => console.log(prevCommentCard));
-    // AddCommentTodo(commentData)
-    //   .then(async () => {
-
-    //     setcommentData((prevData) => ({ ...prevData, comment: "" }));
-    //     setIsShowComment(false);
-    //   })
-    //   .catch((err) => console.log(err));
+    AddCommentTodo(commentData)
+      .then(async () => {
+        setcommentData((prevData) => ({ ...prevData, comment: "" }));
+        setRealoadData((prev) => !prev);
+        setIsShowComment(false);
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <SafeAreaView
@@ -65,7 +73,7 @@ const ActionCard = ({
         </Text>
         <View style={styles.cardBody}>
           {comment?.length > 0 &&
-            comment.map((item, i) => <LightCard {...item} key={i} />)}
+            comment?.map((item, i) => <LightCard {...item} key={i} />)}
         </View>
       </Pressable>
       <CommentModal
@@ -98,8 +106,8 @@ const ActionCard = ({
         </Pressable>
         <Pressable style={styles.actionsDetails} onPress={handleActiveFavorite}>
           <Icon
-            name={`${favorite ? "heart" : "heart-outline"}`}
-            color={`${favorite ? "red" : colors.DARK_THIRDSTY}`}
+            name={`${isFavorite ? "heart" : "heart-outline"}`}
+            color={`${isFavorite ? "red" : colors.DARK_THIRDSTY}`}
             size={icons.DEFAULT_ICON}
           />
           <Text style={{ color: colors.DARK_THIRDSTY }}>{favorite_count}</Text>

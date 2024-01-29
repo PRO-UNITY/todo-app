@@ -3,13 +3,12 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../context/ThemeContext";
-import { icons } from "../../constants/IconSizes";
-import { spacing_size } from "../../constants/Spacing";
-import { font_weight } from "../../constants/FontWeight";
+import { font_weight, icons, spacing_size } from "../../constants";
 
 const CustomDrawer = () => {
   const { themeColors, toggleTheme } = useTheme();
   const navigate = useNavigation();
+
   const handleNavigate = (path) => {
     navigate.navigate(path);
   };

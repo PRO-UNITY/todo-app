@@ -1,13 +1,9 @@
+import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
-import React, { useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { TextInput } from "react-native-gesture-handler";
-import { colors } from "../../constants/Colors";
-import { icons } from "../../constants/IconSizes";
 import { useTheme } from "../../context/ThemeContext";
-import { spacing_size } from "../../constants/Spacing";
-import { rounded } from "../../constants/Corners";
-import { border } from "../../constants/Border";
+import { border, colors, icons, rounded, spacing_size } from "../../constants";
 
 const AddComment = ({ getCommnetData, handleAddComment, commentData }) => {
   const { themeColors } = useTheme();
