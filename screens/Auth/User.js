@@ -6,7 +6,7 @@ export const userData = {
   password: "",
   confirm_password: "",
 };
+console.log(userData);
 export const getUserData = (field, value) => {
-  if (!field || !value) return;
   userData[field] = value;
 };

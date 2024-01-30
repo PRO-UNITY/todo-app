@@ -22,30 +22,32 @@ const UserProfile = ({ navigation }) => {
   const [realoadData, setRealoadData] = useState(false);
   const [user, setUser] = useState(null);
   const [commentCard, setCommentCard] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleLoadMore = () => {
-    if (commentCard.length < 5) return;
-    setPage(page + 1);
-  };
   const getData = () => {
+    setLoading(true);
     GetCommentCard(page)
       .then((res) => {
         setCommentCard(res.results);
-        setError(false);
+        setPageCount(Math.floor(res.count / 10) + 1);
+        setLoading(false);
       })
-      .catch(() => setError(true));
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
   };
   const onTopReached = () => {
-    if (page > 1) {
+    if (page > 1 && !loading) {
       setPage((prev) => prev - 1);
-      getData();
     }
   };
+
   const onBottomReached = () => {
-    if (!error) {
+    if (page < pageCount && !loading) {
       setPage((prev) => prev + 1);
-      getData();
     }
   };
   useEffect(() => {

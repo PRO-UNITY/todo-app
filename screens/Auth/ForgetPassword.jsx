@@ -3,7 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { BackBtn, Button, TextField } from "../../components";
 import { useTheme } from "../../context/ThemeContext";
-import { colors, font_size, font_weight, icons, rounded, spacing_size } from "../../constants";
+import {
+  colors,
+  font_size,
+  font_weight,
+  icons,
+  rounded,
+  spacing_size,
+} from "../../constants";
 
 const ForgetPassword = () => {
   const { themeColors } = useTheme();
@@ -68,7 +75,8 @@ const styles = StyleSheet.create({
   },
   backBtnBox: {
     position: "absolute",
-    top: spacing_size.SPACING,
+    left: spacing_size.SPACING,
+    top: spacing_size.SPACING_MEDIUM,
     justifyContent: "flex-start",
     alignItems: "flex-start",
   },
