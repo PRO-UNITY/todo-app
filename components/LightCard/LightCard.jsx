@@ -16,9 +16,11 @@ const LightCard = ({ comment, user }) => {
         <Text style={[styles.cardTitle, { color: themeColors.textPrimary }]}>
           {comment}
         </Text>
-        <Text style={[styles.subtitle, { color: themeColors.subtitle }]}>
-          {user?.email}
-        </Text>
+        {user?.email && (
+          <Text style={[styles.subtitle, { color: themeColors.subtitle }]}>
+            {user?.email}
+          </Text>
+        )}
       </View>
     </SafeAreaView>
   );

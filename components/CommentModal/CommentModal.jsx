@@ -1,6 +1,13 @@
 import { View, Modal, Pressable, StyleSheet, Text } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { border, colors, font_size, font_weight, rounded, spacing_size } from "../../constants";
+import {
+  border,
+  colors,
+  font_size,
+  font_weight,
+  rounded,
+  spacing_size,
+} from "../../constants";
 
 const CommentModal = ({
   modalVisible,
@@ -28,7 +35,7 @@ const CommentModal = ({
           <View style={styles.modalView}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.author}>{user?.username}</Text>
-            {comment.length > 0 ? (
+            {comment?.length > 0 ? (
               comment?.map((item) => (
                 <View
                   style={[
@@ -37,7 +44,6 @@ const CommentModal = ({
                   ]}
                   key={item?.id}
                 >
-                  <Text>{item?.comment?.user?.username}</Text>
                   <Text
                     style={[
                       styles.commentText,

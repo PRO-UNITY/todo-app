@@ -7,14 +7,11 @@ export const validationInput = {
   confirm_password: false,
 };
 
-export const changeFiled = (field) => {
-  validationInput[field] = false;
-};
-
 export const handleInputValidation = (value) => {
   const emptyFields = Object.keys(value).filter(
     (field) => value[field].trim() === ""
   );
+zz
   if (emptyFields.length > 0) {
     emptyFields.forEach((field) => {
       validationInput[field] = true;

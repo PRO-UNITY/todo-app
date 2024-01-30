@@ -22,6 +22,7 @@ const Home = ({ navigation }) => {
   const [commentCard, setCommentCard] = useState([]);
   const [page, setPage] = useState(1);
   const [realoadData, setRealoadData] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -31,8 +32,8 @@ const Home = ({ navigation }) => {
     setLoading(true);
     GetCommentCard(page)
       .then((res) => {
-        setCommentCard(res.results);
-        setError(false);
+        setCommentCard(res?.results);
+        setPageCount(Math.floor(res.count / 10) + 1);
         setLoading(false);
       })
       .catch(() => {
@@ -41,21 +42,21 @@ const Home = ({ navigation }) => {
       });
   };
   const onTopReached = () => {
-    if (page > 1) {
+    if (page > 1 && !loading) {
       setPage((prev) => prev - 1);
-      getData();
     }
   };
+
   const onBottomReached = () => {
-    if (!error) {
+    if (page < pageCount && !loading) {
       setPage((prev) => prev + 1);
-      getData();
     }
   };
+
   useEffect(() => {
     getData();
     SaveStrageRoute(navigation);
-  }, [realoadData, focused]);
+  }, [realoadData, focused, page]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,30 +81,18 @@ const Home = ({ navigation }) => {
         </View>
         <AddCommetCard setRealoadData={setRealoadData} />
       </View>
-      {loading ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text>
-            <ActivityIndicator
-              size={icons.EXTRA_LARGE_ICON}
-              color={colors.DARK_THIRDSTY}
-            />
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          style={{ padding: spacing_size.SPACING }}
-          data={commentCard}
-          keyExtractor={(item) => item?.id?.toString()}
-          renderItem={({ item }) => (
-            <ActionCard {...item} setRealoadData={setRealoadData} />
-          )}
-          onStartReached={onTopReached}
-          onEndReached={onBottomReached}
-          onEndReachedThreshold={0.1}
-        />
-      )}
+
+      <FlatList
+        style={{ padding: spacing_size.SPACING }}
+        data={commentCard}
+        keyExtractor={(item) => item?.id?.toString()}
+        renderItem={({ item }) => (
+          <ActionCard {...item} setRealoadData={setRealoadData} />
+        )}
+        onEndReached={onBottomReached}
+        onStartReached={onTopReached}
+        onEndReachedThreshold={0.1}
+      />
     </SafeAreaView>
   );
 };

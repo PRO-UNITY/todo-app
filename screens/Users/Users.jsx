@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     padding: spacing_size.SPACING,
+    paddingTop: spacing_size.SPACING_MEDIUM,
   },
   title: {
     fontSize: font_size.TEXT_TITLE,

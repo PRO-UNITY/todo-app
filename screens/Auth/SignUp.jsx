@@ -47,7 +47,7 @@ const SignUp = ({ navigation }) => {
       .then(async (res) => {
         await AsyncStorage.setItem("token", res?.access);
         navigation.navigate("HOME");
-        setErrorShow(true);
+        setErrorShow(true)
         setLoading(false);
       })
       .catch(() => {
