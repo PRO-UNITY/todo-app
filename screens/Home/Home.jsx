@@ -11,7 +11,13 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useTheme } from "../../context/ThemeContext";
-import { colors, font_size, icons, spacing_size } from "../../constants";
+import {
+  colors,
+  font_size,
+  font_weight,
+  icons,
+  spacing_size,
+} from "../../constants";
 import { GetCommentCard } from "../../services";
 import { ActionCard, AddCommetCard } from "../../components";
 import { SaveStrageRoute } from "../../utils";
@@ -59,13 +65,13 @@ const Home = ({ navigation }) => {
   }, [realoadData, focused, page]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View
-        style={[
-          styles.heading,
-          { backgroundColor: themeColors.backgroundLight },
-        ]}
-      >
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: themeColors.backgroundLight },
+      ]}
+    >
+      <View style={styles.heading}>
         <View style={styles.headingTop}>
           <Pressable onPress={openDrawer}>
             <Icon
@@ -81,9 +87,9 @@ const Home = ({ navigation }) => {
         </View>
         <AddCommetCard setRealoadData={setRealoadData} />
       </View>
-
+      <Text style={styles.subtitle}>Task for today</Text>
       <FlatList
-        style={{ padding: spacing_size.SPACING }}
+        style={{ paddingHorizontal: spacing_size.SPACING }}
         data={commentCard}
         keyExtractor={(item) => item?.id?.toString()}
         renderItem={({ item }) => (
@@ -114,6 +120,12 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontSize: font_size.TEXT_TITLE,
     letterSpacing: spacing_size.LETTER_SPACING_DEFAULT,
+  },
+  subtitle: {
+    padding: spacing_size.SPACING,
+    fontSize: font_size.TEXT_TITLE,
+    fontWeight: font_weight.FONT_BOLD,
+    color: colors.TEXT_PRIMARY,
   },
   searchbar: {
     flexDirection: "row",

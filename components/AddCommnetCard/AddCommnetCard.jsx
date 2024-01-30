@@ -1,21 +1,23 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Pressable, ActivityIndicator } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Button from "../Button/Button";
 import { CreateTodoCard } from "../../services/CreateTodo/CreateTodo";
-import { colors, icons, spacing_size } from "../../constants";
+import { colors, icons, rounded, spacing_size } from "../../constants";
 import TextField from "../TextField/TextField";
 
 const AddCommnetCard = ({ setRealoadData }) => {
   const [todo, setTodo] = useState({ title: "" });
+  const [loading, setloading] = useState(false);
 
   const CreateTodoHandle = () => {
+    setloading(true);
     CreateTodoCard(todo)
       .then(async () => {
         setRealoadData((prev) => !prev);
         setTodo((prevData) => ({ ...prevData, title: "" }));
+        setloading(false);
       })
-      .catch((err) => console.log(err));
+      .catch(() => setloading(false));
   };
 
   return (
@@ -30,13 +32,17 @@ const AddCommnetCard = ({ setRealoadData }) => {
         />
       </View>
       <View style={styles.searchBtn}>
-        <Button btnFunc={CreateTodoHandle}>
-          <MaterialCommunityIcons
-            name="check"
-            color={colors.LIGHT_SECONDARY}
-            size={icons.DEFAULT_ICON}
-          />
-        </Button>
+        <Pressable style={styles.addBtn} onPress={CreateTodoHandle}>
+          {loading ? (
+            <ActivityIndicator color={colors.LIGHT_PRIMARY} />
+          ) : (
+            <MaterialCommunityIcons
+              name="check"
+              color={colors.LIGHT_SECONDARY}
+              size={icons.DEFAULT_ICON}
+            />
+          )}
+        </Pressable>
       </View>
     </View>
   );
@@ -47,10 +53,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: spacing_size.SPACING_SMALL,
-    paddingVertical: spacing_size.SPACING,
+    backgroundColor: colors.LIGHT_PRIMARY,
+    borderRadius: rounded.ROUNDED_MD,
+    paddingHorizontal: spacing_size.SPACING_SMALL,
+    paddingVertical: spacing_size.LETTER_SPACING_DEFAULT,
+    marginTop: spacing_size.SPACING_MEDIUM,
+  },
+  addBtn: {
+    alignItems: "center",
+    backgroundColor: "#86A7FC",
+    color: colors.DARK_PRIMARY,
+    paddingVertical: spacing_size.SPACING_SMALL,
+    borderRadius: rounded.ROUNDED_SM,
   },
   searchInput: {
     flex: 5,
+    color: colors.TEXT_PRIMARY,
   },
   searchBtn: {
     flex: 1,

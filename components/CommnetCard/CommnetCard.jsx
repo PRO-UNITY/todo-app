@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, SafeAreaView, StyleSheet, View } from "react-native";
+
 import { useTheme } from "../../context/ThemeContext";
 import { colors, font_size, rounded, spacing_size } from "../../constants";
 

@@ -16,7 +16,7 @@ const Drawer = createDrawerNavigator();
 const RootNavigator = () => {
   const InitialRoute = AsyncStorage.getItem("route").then();
   const [initialRoute, setinitialRoute] = useState(null);
-  console.log(initialRoute);
+
   InitialRoute.then((res) => setinitialRoute(res));
   return (
     <Drawer.Navigator
@@ -24,7 +24,7 @@ const RootNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={InitialRoute}
+      initialRouteName={"LOGIN"}
     >
       <Drawer.Screen
         name="LOGIN"

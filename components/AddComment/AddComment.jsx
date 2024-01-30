@@ -1,34 +1,35 @@
 import React from "react";
-import { View, StyleSheet, Pressable } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { useTheme } from "../../context/ThemeContext";
-import { border, colors, icons, rounded, spacing_size } from "../../constants";
+import { border, colors, rounded, spacing_size } from "../../constants";
 
-const AddComment = ({ getCommnetData, handleAddComment, commentData }) => {
-  const { themeColors } = useTheme();
-
+const AddComment = ({
+  getCommnetData,
+  handleAddComment,
+  commentData,
+  loading,
+}) => {
   return (
     <View style={styles.commentBox}>
       <TextInput
         value={commentData?.comment}
         style={styles.input}
-        placeholderTextColor={colors.LIGHT_FOURTY}
+        placeholderTextColor={colors.LIGHT_PRIMARY}
         placeholder={"Add comment..."}
         onChangeText={(text) => getCommnetData(text)}
       />
-      <Pressable
-        style={[
-          styles.addBtn,
-          { backgroundColor: themeColors.backgroundLight },
-        ]}
-        onPress={handleAddComment}
-      >
-        <MaterialCommunityIcons
-          name="check"
-          color={colors.LIGHT_PRIMARY}
-          size={icons.DEFAULT_ICON}
-        />
+      <Pressable style={styles.addBtn} onPress={handleAddComment}>
+        {loading ? (
+          <ActivityIndicator color={"#3468C0"} />
+        ) : (
+          <Text style={styles.addBtnText}>Add</Text>
+        )}
       </Pressable>
     </View>
   );
@@ -38,19 +39,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing_size.SPACING_SMALL,
+    borderBottomWidth: border.BORDER_DEFAULT,
+    borderColor: colors.LIGHT_PRIMARY,
+    marginVertical: spacing_size.LETTER_SPACING_DEFAULT,
+    marginBottom: spacing_size.SPACING,
   },
   input: {
     padding: spacing_size.SPACING_SMALL,
-    borderBottomWidth: border.BORDER_DEFAULT,
-    borderColor: colors.LIGHT_FOURTY,
-    flex: 6,
+    fontWeight: "600",
+    color: colors.LIGHT_PRIMARY,
+    flex: 1,
   },
   addBtn: {
-    padding: spacing_size.SPACING_SMALL,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: colors.LIGHT_PRIMARY,
+    paddingHorizontal: spacing_size.SPACING_SMALL,
+    paddingVertical: spacing_size.LETTER_SPACING_DEFAULT,
     borderRadius: rounded.ROUNDED_SM,
-    flex: 1,
+  },
+  addBtnText: {
+    color: colors.TEXT_PRIMARY,
   },
 });
 
